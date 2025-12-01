@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from HolaMundo import views # Importo nuestro módulo views, recién creado.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('hola/', views.hola_mundo), # Si queremos que se habra tal cual ponemos el enlace no ponemos nombre
+    path('otramas/', views.home)
 ]

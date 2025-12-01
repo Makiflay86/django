@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <title>I SEE YOU!!</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+    </head>
+
+    <body>
+
+        <div class="row g-1 justify-content-center"> 
+                    <div class="col-auto">
+         
+                        <section class="bg-warning-subtle mt-5 p-5 border border-danger rounded shadow">
+                            <h1>I see you when you sleep!!</h1>
+                            <article class="bg-primary-subtle mt-5 p-5 border border-danger rounded">
+                                <div id="mapa" class="text-center"></div>
+                                
+                                <script>
+                                    var lat = null;
+                                    var lon = null;
+
+                                    if (navigator.geolocation) 
+                                    {
+                                        navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+                                    } else 
+                                    {
+                                        document.getElementById("mapa").innerHTML =
+                                        "La geolocalización no es compatible con este navegador.";
+                                    }
+
+                                    function showPosition(position) 
+                                    {
+                                        lat = position.coords.latitude;
+                                        lon = position.coords.longitude;
+                                        renderMap();
+                                    }
+
+                                    function renderMap() 
+                                    {
+                                        document.getElementById("mapa").innerHTML = 
+                                        `<iframe 
+                                            src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed"
+                                            style="border:0;" 
+                                            allowfullscreen 
+                                            loading="lazy">
+                                        </iframe>`;
+                                    }
+
+                                    function showError(error) 
+                                    {
+                                        let mensaje = "";
+                                        switch (error.code) 
+                                        {
+                                            case error.PERMISSION_DENIED:
+                                                mensaje = "Permiso de geolocalización denegado.";
+                                                break;
+                                            case error.POSITION_UNAVAILABLE:
+                                                mensaje = "Información de ubicación no disponible.";
+                                                break;
+                                            case error.TIMEOUT:
+                                                mensaje = "La solicitud de ubicación ha expirado.";
+                                                break;
+                                            default:
+                                                mensaje = "Error desconocido.";
+                                                break;
+                                        }
+                                        document.getElementById("mapa").innerHTML = mensaje;
+                                    }
+                                </script>
+                            </article>
+                        </section>
+
+                    </div>
+                </div>
+        
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
