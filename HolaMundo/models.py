@@ -24,3 +24,8 @@ class Author (models.Model):
         max_length=150,
         default=''
     )
+
+    # Con el método __str__, sobreescribimos la información por defecto. Indicamos ahí lo que queramos que nos retorne
+    # Ojo, está dentro de la clase
+    def __str__(self):
+        return f'{self.name} {self.last_name}'
