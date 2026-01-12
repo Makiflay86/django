@@ -6,22 +6,32 @@ from django.db import models
 # Al aplicar esta herencia, Django va a saber que Author es una tabla en la BD
 class Author (models.Model):
 
-    name=models.CharField (verbose_name='Nombre', # etiqueta dentro de la tabla
+    name=models.CharField (
+        verbose_name='Nombre', # etiqueta dentro de la tabla
         max_length= 100,
         default=''
     )
 
-    last_name=models.CharField(verbose_name='Apellido',
+    last_name=models.CharField(
+        verbose_name='Apellido',
         max_length=150,
         default=''
     )
     
-    age=models.PositiveSmallIntegerField (verbose_name='Edad',
+    age=models.PositiveSmallIntegerField (
+        verbose_name='Edad',
         max_length=3
     )
 
-    mail=models.EmailField(verbose_name='Mail', 
+    mail=models.EmailField(
+        verbose_name='Mail', 
         max_length=150,
+        default=''
+    )
+
+    telefono=models.CharField(
+        verbose_name='Telefono',
+        max_length=10,
         default=''
     )
 
@@ -29,3 +39,30 @@ class Author (models.Model):
     # Ojo, está dentro de la clase
     def __str__(self):
         return f'{self.name} {self.last_name}'
+    
+
+
+
+
+
+# Clase libro
+class Book (models.Model):
+    title = models.CharField(
+        verbose_name='Título del libro',
+        max_length=255,
+        unique=True
+    )
+
+    #Unique=True , Django no va a permitir introducir dos libros con títulos
+    #iguales. Cuando cree este campo en la BD solo permitir valores diferentes.
+    cod = models.CharField(
+        verbose_name='Codigo',
+        max_length=15,
+        unique=True
+    )
+
+    author = models.ManyToManyField(Author)
+
+
+    def __str__(self):
+        return f'{self.title}'
