@@ -20,6 +20,7 @@ from HolaMundo import views # Importo nuestro módulo views, recién creado.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hola/', views.hola_mundo), # Si queremos que se habra tal cual ponemos el enlace no ponemos nombre
+    path('hola/', views.hola_mundo), # Si queremos que se habra por defecto debemos de no ponerle un nombre en las 
+                                     # comimllas "path('', views.hola_mundo)"
     path('otramas/', views.home)
 ]
