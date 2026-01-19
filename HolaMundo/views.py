@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse # Necesario para poder responder al cliente
 from HolaMundo.models import Author,Book
+from HolaMundo.forms import AutorForm
 
 # Create your views here.
 
@@ -16,6 +17,12 @@ def author (request):
     author = Author.objects.all()
     return render(request,'author.html',{'authors': author})
 
+def author_create(request):
+    return render(request,'author_create.html',{'author_form': AutorForm})
+
 def book (request):
     book = Book.objects.all()
     return render(request,'book.html',{'books': book})
+
+def book_create(request):
+    return render(request,'book_create.html')

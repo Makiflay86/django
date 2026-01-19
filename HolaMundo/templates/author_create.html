@@ -2,9 +2,9 @@
 <html lang="es-ES">
     <head>
         {%extends 'index.html'%}
-        
+
         {%block title%}
-        <title>List of Book</title>
+        <title>List of Author | Create</title>
         {%endblock title%}
         <!-- Required meta tags -->
         <meta charset="utf-8" />
@@ -23,49 +23,29 @@
     </head>
 
     <body>
-
+        
         {%block content%}
         <div class="container-fluid w-50">
 
             <section class="bg-light rounded shadow my-5">
                 <div class="text-center py-2 border-bottom border-danger">
-                    <h1>Libros</h1>
+                    <h1>Crear autor</h1>
                 </div>
-                <article class="bg-info-subtle p-4 ">
-                    
-                    <table class="table table-bordered table-warning">
-                        <thead class="table-dark">
-                            <th>Titulo</th>
-                            <th>Codigo</th>
-                            <th>Autor</th>
-                        </thead>
-                        <tbody>
-                            {% for bo in books %}
-                            <tr>
-                                <td>{{ bo.title }} </td>
-                                <td>{{ bo.cod }}</td>
-                                <td>
-                                    {% for au in bo.author.all %}
-                                    {{au}}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <article class="bg-info-subtle p-4">
 
-                    <div class="my-3 align-middle">
-                        <a href="/index/" class="btn btn-warning">
-                            ← Volver
+                    {{author_form}}
+
+                    <div class="my-3">
+                        <a href="/author/" class="btn btn-danger">
+                            ← Cancelar
                         </a>
                     </div>
-                    
+
                 </article>
             </section>
 
         </div>
         {%endblock content%}
-
         
         <!-- Bootstrap JavaScript Libraries -->
         <script

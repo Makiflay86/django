@@ -24,5 +24,8 @@ urlpatterns = [
                                      # comimllas "path('', views.hola_mundo)"
     path('index/', views.home),
     path('author/', views.author),
-    path('book/', views.book)
+    path('book/', views.book),
+
+    path('author_create/', views.author_create),
+    path('book_create/', views.book_create)
 ]
