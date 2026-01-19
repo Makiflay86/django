@@ -1,7 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-ES">
     <head>
-        <title>Django - Hola Mundo</title>
+        {%block title%}
+        <title>Index - Hola Mundo</title>
+        {%endblock title%}
+
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
@@ -21,36 +24,39 @@
 
     <body>
 
-        <div class="container-fluid w-50">
-
-            <section class="bg-light border-black shadow my-5">
-                <div class="text-center py-2 border-bottom border-danger">
-                    <h1>Blog de libros y sus autores</h1>
+        <!-- NavBar -->
+        {%block navbar%}
+        <nav class="navbar navbar-expand-lg bg-primary-subtle mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/index/">Index</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/author/">Author</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/book/">Book</a>
+                        </li>
+                    </ul>
                 </div>
-                <article class="bg-info-subtle p-4">
+            </div>
+        </nav>
+        {%endblock navbar%}
 
-                    <ol class="list-group list-group-numbered">
-                        <!-- 1º -->
-                        <a href="/author/" class="list-group-item list-group-item-action d-flex align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Authors</div>
-                                Lista de autores
-                            </div>
-                        </a>
-                        
-                        <!-- 2º -->
-                        <a href="/book/" class="list-group-item list-group-item-action d-flex align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Books</div>
-                                Lista de libros
-                            </div>
-                        </a>
-                    </ol>
-
-                </article>
-            </section>
-    
-        </div>
+        {%block content%}
+        <h1 class="text-center">index.hmlt</h1>
+        {%endblock content%}
+        
+        {%block footer%}
+        <footer class="mt-5 p-2 text-center border rounded bg-primary-subtle fixed-bottom">
+            <h6>
+                Realizado por<br> Francisco Aybar Romero
+            </h6>
+        </footer>
+        {%endblock footer%}
 
         
         <script

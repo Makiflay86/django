@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="es-ES">
     <head>
-        <title>Book</title>
+        {%extends 'index.html'%}
+
+        {%block title%}
+        <title>List of Author</title>
+        {%endblock title%}
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
@@ -20,6 +24,7 @@
 
     <body>
         
+        {%block content%}
         <div class="container-fluid w-50">
 
             <section class="bg-light rounded shadow my-5">
@@ -49,6 +54,7 @@
             </section>
 
         </div>
+        {%endblock content%}
         
         <!-- Bootstrap JavaScript Libraries -->
         <script
