@@ -22,5 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hola/', views.hola_mundo), # Si queremos que se habra por defecto debemos de no ponerle un nombre en las 
                                      # comimllas "path('', views.hola_mundo)"
-    path('index/', views.home)
+    path('index/', views.home),
+    path('author/', views.author),
+    path('book/', views.book)
 ]
