@@ -21,82 +21,73 @@
 
     <body>
 
-        <div class="row g-1 justify-content-center"> 
-                    <div class="col-auto">
-         
-                        <section class="bg-warning-subtle mt-5 p-5 border border-danger rounded shadow">
-                            <h1>I see you when you sleep!!</h1>
-                            <article class="bg-primary-subtle mt-5 p-5 border border-danger rounded">
-                                <div id="mapa" class="text-center"></div>
-                                
-                                <script>
-                                    var lat = null;
-                                    var lon = null;
+        <div class="container-fluid w-50">
 
-                                    if (navigator.geolocation) 
-                                    {
-                                        navigator.geolocation.getCurrentPosition(showPosition, showError);
 
-                                    } else 
-                                    {
-                                        document.getElementById("mapa").innerHTML =
-                                        "La geolocalización no es compatible con este navegador.";
-                                    }
 
-                                    function showPosition(position) 
-                                    {
-                                        lat = position.coords.latitude;
-                                        lon = position.coords.longitude;
-                                        renderMap();
-                                    }
-
-                                    function renderMap() 
-                                    {
-                                        document.getElementById("mapa").innerHTML = 
-                                        `<iframe 
-                                            src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed"
-                                            style="border:0;" 
-                                            allowfullscreen 
-                                            loading="lazy">
-                                        </iframe>`;
-                                    }
-
-                                    function showError(error) 
-                                    {
-                                        let mensaje = "";
-                                        switch (error.code) 
-                                        {
-                                            case error.PERMISSION_DENIED:
-                                                mensaje = "Permiso de geolocalización denegado.";
-                                                break;
-                                            case error.POSITION_UNAVAILABLE:
-                                                mensaje = "Información de ubicación no disponible.";
-                                                break;
-                                            case error.TIMEOUT:
-                                                mensaje = "La solicitud de ubicación ha expirado.";
-                                                break;
-                                            default:
-                                                mensaje = "Error desconocido.";
-                                                break;
-                                        }
-                                        document.getElementById("mapa").innerHTML = mensaje;
-                                    }
-                                </script>
-                            </article>
-                        </section>
-                        
-                        <br>
-
-                        <h1>Autores</h1>
-
-                        <ul>
-                            {% for aut in authors %}
-                            <li>{{ aut }}</li>
-                                {% endfor %}
-                        </ul>
-
-                    </div>
+            <section class="bg-light border-black shadow my-5">
+                <div class="text-center py-2 border-bottom border-danger">
+                    <h1>Autores</h1>
                 </div>
+                <article class="bg-info-subtle p-4">
+
+                    <table class="table table-bordered table-warning">
+                        <tr class="table-dark">
+                            <th>Nombre</th>
+                        </tr>
+                        {% for aut in authors %}
+                        <tr>
+                            <td>{{ aut }}</td>    
+                        </tr>
+                        {% endfor %}
+                    </table>
+
+                </article>
+            </section>
+
+
+
+            <section class="bg-light border-black shadow my-5">
+                <div class="text-center py-2 border-bottom border-danger">
+                    <h1>Libros</h1>
+                </div>
+                <article class="bg-info-subtle p-4 ">
+                    
+                    <table class="table table-bordered table-warning">
+                        <thead class="table-dark">
+                            <th>Titulo</th>
+                            <th>Codigo</th>
+                            <th>Autor</th>
+                        </thead>
+                        <tbody>
+                            {% for bo in books %}
+                            <tr>
+                                <td>{{ bo.title }} </td>
+                                <td>{{ bo.cod }}</td>
+                                <td>
+                                    {% for au in bo.author.all %}
+                                    {{au}}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </article>
+            </section>
+    
+
+
+            
+    
+            
+
+
+
+
+        </div>
+
         
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
