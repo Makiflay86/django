@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse # Necesario para poder responder al cliente
 from HolaMundo.models import Author,Book
 from HolaMundo.forms import AutorForm
@@ -18,7 +18,35 @@ def author (request):
     return render(request,'author.html',{'authors': author})
 
 def author_create(request):
-    return render(request,'author_create.html',{'author_form': AutorForm})
+    if request.method == 'GET':
+        return render(request, 'author_create.html', {'author_form': AutorForm}) 
+        #Si tenemos las páginas
+        #dentro de alguna carpeta dentro de template, entonces habría que especificar el nombre de la
+        #carpeta return Ej:render(request, 'nombre_carpeta/create_autor.html')
+
+    #Hemos añadido el contexto para pasarlo como parámetro a la página create_autor.html
+    if request.method == 'POST':
+    #Estaremos aqui en esta opción cuando le damos a guardar. Para obtener la información que
+    #envía el formulario:
+    # EN request.POST es dónde tenemos toda esa información. De hecho si imprimimos esa variable la
+    #podemos ver.
+        form = AutorForm(data = request.POST)
+    
+    #Hemos creado una instancia de un form de Django al que le estamos pasando los datos usando la
+    #variable data, de esta manera entiende que se va a registrar una información (que va a ser un
+    #diccionario)
+    if form.is_valid: #Realizará de forma automática las validaciones que se han establecido en
+    #el modelo
+        form.save() #Guarda en la BD. En pocas lineas hemos validado y guardado.
+        return redirect ('/author/') #Hay que importar el redirect en shortcuts. Debe redireccionar
+        #al listado de autores.
+    else:
+    #Debo volver a crear una instancia del forma para dar la opción de poder escribir otra vez
+    #los datos, con los mismos datos que ha introducido para que vea qué cual puede ser el error.
+        form = AutorForm(data = request.POST)
+        return render (request, 'author_create.html',{'author_form': AutorForm}) #Es como si fuera un
+        #GET
+
 
 def book (request):
     book = Book.objects.all()
