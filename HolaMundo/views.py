@@ -47,6 +47,35 @@ def author_create(request):
         return render (request, 'author_create.html',{'author_form': AutorForm}) #Es como si fuera un
         #GET
 
+def author_update (request, pk = None): #Recibe la clave del autor que queremos actualizar.
+    author = Author.objects.get(pk = pk) #Nos buscará el registro que coincida con la clave que le
+    #pongamos aquí.En el caso en el que no lo encuentre, va a generar un error, con lo que hay que
+    #capturar excepción
+    #Existe otra opción que es con el filter, pero para grandes cantidades de datos el get es más
+    #óptimo
+    # autor=Author.objects.filter(pk=pk).first Esta sería la otra forma
+
+    if request.method == 'GET':
+        author_form = AutorForm(instance = author) #todo form basado en un modelo tiene este atributo que
+        #hace referencia a la instancia de un objeto de la BD. Al pasarle este objeto, Django toma los
+        #atributos de éste y asociarlo a su campo html correspondiente que le estamos generando con el Form.
+        return render (request,'author_update.html',{'author':author,'author_form':author_form}) #si la
+        #página la tenemos dentro de template/core, hay que poner core/update_autor.html
+        #Le pasamos también la variable author_form para obtener los valores que deseamos editar.
+
+    if request.method == 'POST':
+        author_form = AutorForm(data = request.POST, instance = author) #Combinamos obtene información así
+        #como asociarla a una instancia. De esta forma Django entiende que es una actualización
+        #El resto del proceso será igual que en la creación de autores.
+        
+    if author_form.is_valid():
+        author_form.save()
+        return redirect ('/author/') #Se realiza igual que en la creación
+    else: #Creo nueva instancia con la misma información que tenía y además pinto la información
+        #en el template
+        author_form = AutorForm(data = request.POST, instance = author)
+        return render (request,'author_update.html',{'author':author,'author_form':author_form})
+
 
 def book (request):
     book = Book.objects.all()
