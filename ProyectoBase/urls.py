@@ -23,11 +23,17 @@ urlpatterns = [
     path('hola/', views.hola_mundo), # Si queremos que se habra por defecto debemos de no ponerle un nombre en las 
                                      # comimllas "path('', views.hola_mundo)"
     path('index/', views.home),
+    
+    
     path('author/', views.author),
-    path('book/', views.book),
-
     path('author_create/', views.author_create),
-    path('book_create/', views.book_create),
-    path ('author_update/<int:pk>', views.author_update),
-    path ('author_delete/<int:pk>', views.author_delete)
+    path('author_update/<int:pk>', views.author_update),
+    path('author_delete/<int:pk>', views.author_delete),
+    
+    path('book/', views.book),
+    path('book_create/', views.book_create)
+    #path('book_update/<int:pk>', views.book_update),
+    #path('book_delete/<int:pk>', views.book_delete)
+
+    
 ]

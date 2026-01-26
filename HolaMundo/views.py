@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse # Necesario para poder responder al cliente
 from HolaMundo.models import Author,Book
-from HolaMundo.forms import AutorForm
+from HolaMundo.forms import AutorForm, BookForm
 
 # Create your views here.
 
@@ -12,6 +12,7 @@ def hola_mundo (request): # El request captura las peticiones de los clientes
 
 def home (request): # Pinta una página con render, también hay que darlo de alta en urls.py
     return render(request,'index.html') # La página index.html hay que crearla dentro del archivo de configuración de todo proyecto de django, settings.py
+
 
 
 # Tabla de autores
@@ -90,6 +91,7 @@ def author_delete (request, pk = None):
     return redirect ('/author/')
 
 
+
 # Tabla de libros
 def book (request):
     book = Book.objects.all()
@@ -97,4 +99,21 @@ def book (request):
 
 # Crear los libros
 def book_create(request):
-    return render(request,'book_create.html')
+    if request.method == 'GET':
+        return render(request, 'book_create.html', {'book_form': BookForm})
+    
+    if request.method == 'POST':
+        book_form = BookForm(data = request.POST) #data es lo que le enviamos para que inserte
+    
+    if book_form.is_valid(): #Valido la información que me envían para guardar el libro. Realmente
+    #la información está en book_form.
+        new_book = Book.objects.create(title = book_form.cleaned_data.get('title'),cod = book_form.cleaned_data.get('cod'))
+        #Hasta aquí habrá registrado mi libro. Ahora pasamos al campo relaciona.
+        #Ahora guardo la instancia que acabo de registrar, envíandole el id que quiero guardar
+        #el atributo set, lo tiene el campo implicado en la relación manytomany
+        new_book.author.set(book_form.cleaned_data.get('author'))
+        return redirect('/book/')
+    else:
+        return render(request, 'book_create.html',{'book_form':BookForm}) #Le enviamos a la
+        #página de creación con los datos incluidos para que pueda comprobar qué dato está mal.
+
