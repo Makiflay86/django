@@ -31,9 +31,9 @@ urlpatterns = [
     path('author_delete/<int:pk>', views.author_delete),
     
     path('book/', views.book),
-    path('book_create/', views.book_create)
-    #path('book_update/<int:pk>', views.book_update),
-    #path('book_delete/<int:pk>', views.book_delete)
+    path('book_create/', views.book_create),
+    path('book_update/<int:pk>', views.book_update),
+    path('book_delete/<int:pk>', views.book_delete)
 
     
 ]

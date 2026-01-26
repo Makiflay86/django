@@ -117,3 +117,27 @@ def book_create(request):
         return render(request, 'book_create.html',{'book_form':BookForm}) #Le enviamos a la
         #página de creación con los datos incluidos para que pueda comprobar qué dato está mal.
 
+# Editar los libros
+def book_update (request, pk = None):
+    book = Book.objects.get(pk = pk) 
+
+    if request.method == 'GET':
+        book_form = BookForm(instance = book) 
+
+        return render (request,'book_update.html',{'book':book,'book_form':book_form})
+
+    if request.method == 'POST':
+        book_form = BookForm(data = request.POST, instance = book)
+        
+    if book_form.is_valid():
+        book_form.save()
+        return redirect ('/book/')
+    else:
+        book_form = BookForm(data = request.POST, instance = book)
+        return render (request,'book_update.html',{'book':book,'book_form':book_form})
+    
+# Eliminar los libros
+def book_delete (request, pk = None):
+    Book.objects.filter(pk = pk).delete()
+
+    return redirect ('/book/')
