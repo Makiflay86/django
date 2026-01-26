@@ -13,10 +13,13 @@ def hola_mundo (request): # El request captura las peticiones de los clientes
 def home (request): # Pinta una página con render, también hay que darlo de alta en urls.py
     return render(request,'index.html') # La página index.html hay que crearla dentro del archivo de configuración de todo proyecto de django, settings.py
 
+
+# Tabla de autores
 def author (request):
     author = Author.objects.all()
     return render(request,'author.html',{'authors': author})
 
+# Crear los autores
 def author_create(request):
     if request.method == 'GET':
         return render(request, 'author_create.html', {'author_form': AutorForm}) 
@@ -47,6 +50,7 @@ def author_create(request):
         return render (request, 'author_create.html',{'author_form': AutorForm}) #Es como si fuera un
         #GET
 
+# Editar los autores
 def author_update (request, pk = None): #Recibe la clave del autor que queremos actualizar.
     author = Author.objects.get(pk = pk) #Nos buscará el registro que coincida con la clave que le
     #pongamos aquí.En el caso en el que no lo encuentre, va a generar un error, con lo que hay que
@@ -76,10 +80,21 @@ def author_update (request, pk = None): #Recibe la clave del autor que queremos 
         author_form = AutorForm(data = request.POST, instance = author)
         return render (request,'author_update.html',{'author':author,'author_form':author_form})
 
+# Eliminar los autores
+def author_delete (request, pk = None):
+    #Eliminación directa
+    Author.objects.filter(pk = pk).delete()
+    #Otra forma de hacerlo
+    #autor=Author.objects.get(pk=pk)
+    #autor.delete()
+    return redirect ('/author/')
 
+
+# Tabla de libros
 def book (request):
     book = Book.objects.all()
     return render(request,'book.html',{'books': book})
 
+# Crear los libros
 def book_create(request):
     return render(request,'book_create.html')
