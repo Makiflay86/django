@@ -20,7 +20,25 @@
 
     <body>
        
-        <h1>Soy el index</h1>
+
+
+
+        <h1>esto es el index hola caracola,estoy</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th>marca</th>
+                <th>kilometros</th>
+            </tr>
+            {% for car in cars %}
+            <tr>
+                <td>{{ car }}</td> 
+                <td>{{ car.kilometros }}</td> 
+            <tr>
+            {% endfor %}
+        </table>
+
+
+
 
         <!-- Bootstrap JavaScript Libraries -->
         <script
