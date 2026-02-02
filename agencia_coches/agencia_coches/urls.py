@@ -16,7 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+# Activamos el soporte de imágenes
+from django.conf import settings 
+from django.conf.urls.static import static
+
 from app_agencia_coches import views # Importamos todas las vistas de nuestra app
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +30,6 @@ urlpatterns = [
     path('hola_mundo/', views.hola_mundo),
     path('home/', views.home),
 ]
+
+
+if settings.DEBUG: urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
