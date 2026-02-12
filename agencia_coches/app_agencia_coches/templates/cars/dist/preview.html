@@ -1,0 +1,58 @@
+{%extends 'index.html'%}
+
+{%block title%}
+<title>Lista de coches</title>
+{%endblock title%}
+
+{% load humanize %}
+
+{%block content%}
+<div class="container">
+
+    <div class="mb-3 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary">
+            <i class="bi bi-plus-circle-dotted"></i>
+            Añadir coche
+        </button>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for car in cars %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 card-hover">
+                    {% if car.imagen %}
+                        <img src="{{ car.imagen.url }}" alt="{{ car }} - {{ car.kilometros|intcomma }}km - {{ car.combustible }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <i class="bi bi-image fs-1 d-flex justify-content-center align-items-center card-img-top" style="height: 200px; object-fit: cover;"></i>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car }}</h5>
+                        <p class="card-text text-muted small">
+                            <span class="badge bg-light text-dark border">{{ car.combustible }}</span>
+                            <span class="ms-2">
+                                {% if car.kilometros >= 1000 %}
+                                    {{ car.kilometros|intcomma }} km
+                                {% else %}
+                                    {{ car.kilometros }} km
+                                {% endif %}
+                            </span>
+
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
+                        <a href="" class="btn btn-sm btn-success">
+                            Editar
+                        </a>
+
+                        <a href="" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{%endblock content%}

@@ -8,3 +8,10 @@ def hola_mundo (request):
 def home (request):
     cars = Cars.objects.all()
     return render(request,'index.html',{'cars':cars})
+
+
+
+# Tabla de coches
+def cars (request):
+    cars = Cars.objects.all()
+    return render(request,'cars/preview.html',{'cars':cars})
