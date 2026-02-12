@@ -1,0 +1,37 @@
+{%extends 'index.html'%}
+
+{%block title%}
+<title>Añadir coche</title>
+{%endblock title%}
+
+{% load humanize %}
+
+{%block content%}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <section class="bg-light rounded shadow my-5">
+                <div class="text-center py-2 border-bottom border-danger">
+                    <h1>Añadir coche</h1>
+                </div>
+                <article class="bg-info-subtle p-4">
+
+                    <form action="" method="POST" class="form">
+                        
+                        {%csrf_token%}
+                        {{cars_form}}
+
+                        <div class="my-3">
+                            <a href="/cars/" class="btn btn-danger">← Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </form>
+
+                </article>
+            </section>
+        </div>
+    </div>
+</div>
+{%endblock content%}

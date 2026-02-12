@@ -29,7 +29,8 @@ urlpatterns = [
 
     path('hola_mundo/', views.hola_mundo),
     path('home/', views.home),
-    path('cars/', views.cars)
+    path('cars/', views.cars),
+    path('cars_create/', views.cars_create),
 ]
 
 
