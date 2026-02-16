@@ -20,7 +20,7 @@ def cars (request):
 # Crear los coches
 def cars_create(request):
     if request.method == 'GET':
-        return render(request, 'cars_create.html', {'cars_form': CarsForm}) 
+        return render(request, 'cars/cars_create.html', {'cars_form': CarsForm}) 
     
     if request.method == 'POST':
         form = CarsForm(data = request.POST)
@@ -30,4 +30,4 @@ def cars_create(request):
         return redirect ('/cars/')
     else:
         form = CarsForm(data = request.POST)
-        return render (request, 'cars_create.html',{'cars_form': CarsForm})
+        return render (request, 'cars/cars_create.html',{'cars_form': CarsForm})

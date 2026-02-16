@@ -28,9 +28,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('hola_mundo/', views.hola_mundo),
-    path('home/', views.home),
-    path('cars/', views.cars),
-    path('cars_create/', views.cars_create),
+    path('home/', views.home, name='home'),
+    path('cars/', views.cars, name='cars'),
+    path('cars_create/', views.cars_create, name='cars_create'),
 ]
 
 
