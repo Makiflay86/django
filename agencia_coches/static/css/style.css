@@ -1,0 +1,5 @@
+/* Paddin-bottom para separar el footer de las cards */
+body 
+{
+    padding-bottom: 90px;
+}
