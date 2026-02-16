@@ -35,7 +35,8 @@ def cars_create(request):
 def car_detail(request, pk):
     # Busca el coche por su ID (pk) o lanza un error 404 si no existe
     car = get_object_or_404(Cars, pk=pk)
-    return render(request, 'cars/car_detail.html', {'car': car})
+    imagenes = car.imagenes_adicionales.all()
+    return render(request, 'cars/car_detail.html', {'car': car,'imagenes': imagenes})
 
 
 
