@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 from .forms import CarsForm
@@ -31,3 +31,8 @@ def cars_create(request):
     else:
         form = CarsForm(data = request.POST)
         return render (request, 'cars/cars_create.html',{'cars_form': CarsForm})
+    
+def car_detail(request, pk):
+    # Busca el coche por su ID (pk) o lanza un error 404 si no existe
+    car = get_object_or_404(Cars, pk=pk)
+    return render(request, 'cars/car_detail.html', {'car': car})
