@@ -49,15 +49,28 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-2">
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'employees' %}">Employees</a>
+                            <a class="nav-link {% if request.resolver_match.url_name == 'employees' %}active fw-bold text-primary{% endif %}"
+                            href="{% url 'employees' %}">
+                                Employees
+                            </a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cars' %}">Cars</a>
+                            <a class="nav-link {% if request.resolver_match.url_name == 'cars' %}active fw-bold text-primary{% endif %}"
+                            href="{% url 'cars' %}">
+                                Cars
+                            </a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'extras' %}">Extras</a>
+                            <a class="nav-link {% if request.resolver_match.url_name == 'extras' %}active fw-bold text-primary{% endif %}"
+                            href="{% url 'extras' %}">
+                                Extras
+                            </a>
                         </li>
+
                     </ul>
                 </div>
 
