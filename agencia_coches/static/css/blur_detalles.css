@@ -1,0 +1,33 @@
+/* El botón está invisible por defecto */
+.hover-overlay 
+{
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    pointer-events: none; /* Evita que el botón interfiera si no es visible */
+}
+
+
+
+/* La imagen tiene una transición suave */
+.blur-target 
+{
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+
+
+/* Al pasar el ratón por el contenedor... */
+.hover-container:hover .blur-target 
+{
+    filter: blur(4px) brightness(0.7); /* Desenfoca y oscurece */
+    transform: scale(1.05); /* Efecto opcional de zoom suave */
+}
+
+
+
+.hover-container:hover .hover-overlay 
+{
+    opacity: 1; /* Muestra el botón */
+    pointer-events: auto;
+}

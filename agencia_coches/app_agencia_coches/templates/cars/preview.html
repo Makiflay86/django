@@ -21,14 +21,22 @@
         {% for car in cars %}
             <div class="col">
                 <div class="card h-100 shadow-sm border-0 card-hover">
-                    {% if car.imagen %}
-                        <img src="{{ car.imagen.url }}" alt="{{ car }} - {{ car.kilometros|intcomma }}km - {{ car.combustible }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                    {% else %}
-                        <i class="bi bi-image fs-1 d-flex justify-content-center align-items-center card-img-top" style="height: 200px; object-fit: cover;"></i>
-                    {% endif %}
-                    <a href="" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-eye-fill"></i>
-                    </a>
+                    
+                    <div class="position-relative overflow-hidden hover-container">
+                        {% if car.imagen %}
+                            <img src="{{ car.imagen.url }}" class="card-img-top blur-target" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top blur-target d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        {% endif %}
+
+                        <div class="hover-overlay position-absolute top-50 start-50 translate-middle">
+                            <a href="" class="btn btn-dark rounded-pill">
+                                <i class="bi bi-eye-fill"></i> Ver detalles
+                            </a>
+                        </div>
+                    </div>
 
                     <div class="card-body">
                         <h5 class="card-title">{{ car }}</h5>
