@@ -37,6 +37,8 @@ urlpatterns = [
     path('employees/', views.employees, name='employees'),
     path('employees_create/', views.employees_create, name='employees_create'),
     path('employees/<int:pk>/', views.employee_detail, name='employee_detail'),
+
+    path('extras/', views.extras, name='extras'),
 ]
 
 

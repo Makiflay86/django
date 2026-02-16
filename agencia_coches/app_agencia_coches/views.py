@@ -63,3 +63,10 @@ def employee_detail(request, pk):
     # Busca el empleado por su ID (pk) o lanza un error 404 si no existe
     employee = get_object_or_404(Employee, pk=pk)
     return render(request, 'employee/employee_detail.html', {'employee': employee})
+
+
+
+# Tabla de extras
+def extras (request):
+    extras = Extra.objects.all()
+    return render(request, 'extras/extras.html', {'extras':extras})
