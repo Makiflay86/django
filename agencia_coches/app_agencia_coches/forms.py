@@ -14,3 +14,11 @@ class EmployeesForm (forms.ModelForm):
     class Meta:
         model = Employee
         fields='__all__'
+
+
+
+class ExtrasForm (forms.ModelForm):
+
+    class Meta:
+        model = Extra
+        fields='__all__'

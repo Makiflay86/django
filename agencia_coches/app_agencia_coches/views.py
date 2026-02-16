@@ -70,3 +70,18 @@ def employee_detail(request, pk):
 def extras (request):
     extras = Extra.objects.all()
     return render(request, 'extras/extras.html', {'extras':extras})
+
+# Crear los extras
+def extras_create(request):
+    if request.method == 'GET':
+        return render(request, 'extras/extras_create.html', {'extras_form': ExtrasForm}) 
+    
+    if request.method == 'POST':
+        form = ExtrasForm(request.POST, request.FILES)
+    
+    if form.is_valid:
+        form.save()
+        return redirect ('/extras/')
+    else:
+        form = ExtrasForm(data = request.POST)
+        return render (request, 'extras/extras_create.html',{'extras_form': ExtrasForm})
