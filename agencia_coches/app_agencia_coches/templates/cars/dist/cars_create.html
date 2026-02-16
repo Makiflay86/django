@@ -4,8 +4,6 @@
 <title>Añadir coche</title>
 {%endblock title%}
 
-{% load humanize %}
-
 {%block content%}
 <div class="container my-5">
     <div class="row justify-content-center">
@@ -17,7 +15,7 @@
                 </div>
                 <article class="bg-info-subtle p-4">
 
-                    <form action="" method="POST" class="form">
+                    <form action="" method="POST" class="form" enctype="multipart/form-data">
                         
                         {%csrf_token%}
                         {{cars_form}}

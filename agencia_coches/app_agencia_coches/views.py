@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import *
-from .forms import CarsForm
+from .forms import *
 
 def hola_mundo (request):
     return HttpResponse ("<h1>hola mundo</h1>")
@@ -15,7 +15,7 @@ def home (request):
 # Tabla de coches
 def cars (request):
     cars = Cars.objects.all()
-    return render(request, 'cars/preview.html', {'cars':cars})
+    return render(request, 'cars/cars.html', {'cars':cars})
 
 # Crear los coches
 def cars_create(request):
@@ -23,7 +23,7 @@ def cars_create(request):
         return render(request, 'cars/cars_create.html', {'cars_form': CarsForm}) 
     
     if request.method == 'POST':
-        form = CarsForm(data = request.POST)
+        form = CarsForm(request.POST, request.FILES)
     
     if form.is_valid:
         form.save()
@@ -40,9 +40,24 @@ def car_detail(request, pk):
 
 
 # Tabla de trabajadores
-def employee (request):
+def employees (request):
     employees = Employee.objects.all()
-    return render(request, 'employee/employee.html', {'employees':employees})
+    return render(request, 'employee/employees.html', {'employees':employees})
+
+# Crear los trabajadores
+def employees_create(request):
+    if request.method == 'GET':
+        return render(request, 'employee/employees_create.html', {'employees_form': EmployeesForm}) 
+    
+    if request.method == 'POST':
+        form = EmployeesForm(request.POST, request.FILES)
+    
+    if form.is_valid:
+        form.save()
+        return redirect ('/employee/')
+    else:
+        form = EmployeesForm(data = request.POST)
+        return render (request, 'employee/employees_create.html',{'employees_form': EmployeesForm})
 
 def employee_detail(request, pk):
     # Busca el empleado por su ID (pk) o lanza un error 404 si no existe

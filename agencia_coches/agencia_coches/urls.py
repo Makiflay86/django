@@ -34,9 +34,9 @@ urlpatterns = [
     path('cars_create/', views.cars_create, name='cars_create'),
     path('cars/<int:pk>/', views.car_detail, name='car_detail'),
 
-    path('employee/', views.employee, name='employee'),
-
-    path('employee/<int:pk>/', views.employee_detail, name='employee_detail'),
+    path('employees/', views.employees, name='employees'),
+    path('employees_create/', views.employees_create, name='employees_create'),
+    path('employees/<int:pk>/', views.employee_detail, name='employee_detail'),
 ]
 
 

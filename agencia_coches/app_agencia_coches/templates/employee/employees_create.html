@@ -1,7 +1,7 @@
 {%extends 'index.html'%}
 
 {%block title%}
-<title>Añadir coche</title>
+<title>Añadir empleado</title>
 {%endblock title%}
 
 {%block content%}
@@ -11,17 +11,17 @@
 
             <section class="bg-light rounded shadow my-5">
                 <div class="text-center py-2 border-bottom border-danger">
-                    <h1>Añadir coche</h1>
+                    <h1>Añadir empleado</h1>
                 </div>
                 <article class="bg-info-subtle p-4">
 
                     <form action="" method="POST" class="form" enctype="multipart/form-data">
                         
                         {%csrf_token%}
-                        {{cars_form}}
+                        {{employees_form}}
 
                         <div class="my-3">
-                            <a href="{% url 'cars' %}" class="btn btn-danger">← Cancelar</a>
+                            <a href="{% url 'employees' %}" class="btn btn-danger">← Cancelar</a>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
 
