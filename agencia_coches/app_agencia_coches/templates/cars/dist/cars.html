@@ -1,27 +1,30 @@
 {%extends 'index.html'%}
 
-{% block title %}
-<title>Lista de Empleados</title>
-{% endblock title %}
+{%block title%}
+<title>Lista de coches</title>
+{%endblock title%}
 
-{% block content %}
+{% load humanize %}
+
+{%block content%}
 <div class="container">
 
     <div class="my-3 d-flex justify-content-center">
-        <a href="{% url 'employees_create' %}" class="btn btn-primary">
+        <a href="{% url 'cars_create' %}" class="btn btn-primary">
             <i class="bi bi-plus-circle-dotted"></i>
-            Añadir empleado
+            Añadir coche
         </a>
     </div>
 
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {% for employee in employees %}
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0 card-hover">
+        {% for car in cars %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 card-hover">
                     
                     <div class="position-relative overflow-hidden hover-container">
-                        {% if employee.foto %}
-                            <img src="{{ employee.foto.url }}" class="card-img-top blur-target" style="height: 200px; object-fit: cover;">
+                        {% if car.imagen %}
+                            <img src="{{ car.imagen.url }}" class="card-img-top blur-target" style="height: 200px; object-fit: cover;">
                         {% else %}
                             <div class="card-img-top blur-target d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
                                 <i class="bi bi-image fs-1"></i>
@@ -29,32 +32,43 @@
                         {% endif %}
 
                         <div class="hover-overlay position-absolute top-50 start-50 translate-middle">
-                            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-dark rounded-pill">
+                            <a href="{% url 'car_detail' car.id %}" class="btn btn-dark rounded-pill">
                                 <i class="bi bi-eye-fill"></i> Ver detalles
                             </a>
                         </div>
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title">{{ employee.nombre }} {{ employee.apellidos }}</h5>
+                        <h5 class="card-title">{{ car }}</h5>
                         <p class="card-text text-muted small">
-                            <span class="badge bg-light text-dark border">{{ employee.puesto }}</span>
+                            <span class="badge bg-light text-dark border">{{ car.combustible }}</span>
+                            <span class="ms-2">
+                                {% if car.kilometros >= 1000 %}
+                                    {{ car.kilometros|intcomma }} km
+                                {% else %}
+                                    {{ car.kilometros }} km
+                                {% endif %}
+                            </span>
                         </p>
                     </div>
-                    
+
                     <div class="card-footer bg-white d-flex justify-content-between border-0 pb-3">
                         <a href="" class="btn btn-sm btn-warning">
                             Editar
                         </a>
-                        
+
                         <a href="" class="btn btn-sm btn-outline-danger">
                             <i class="bi bi-x-lg"></i>
                         </a>
                     </div>
+
+                    <div class="card-footer">
+                        <small class="text-body-secondary">Creado por: {{ car.creado_por }}</small>
+                    </div>
+
                 </div>
             </div>
         {% endfor %}
     </div>
-
 </div>
-{% endblock content %}
+{%endblock content%}
