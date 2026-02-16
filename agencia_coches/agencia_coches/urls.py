@@ -29,9 +29,14 @@ urlpatterns = [
 
     path('hola_mundo/', views.hola_mundo),
     path('home/', views.home, name='home'),
+
     path('cars/', views.cars, name='cars'),
     path('cars_create/', views.cars_create, name='cars_create'),
     path('cars/<int:pk>/', views.car_detail, name='car_detail'),
+
+    path('employee/', views.employee, name='employee'),
+
+    path('employee/<int:pk>/', views.employee_detail, name='employee_detail'),
 ]
 
 

@@ -1,0 +1,60 @@
+{%extends 'index.html'%}
+
+{% block title %}
+<title>Lista de Empleados</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+
+    <div class="my-3 d-flex justify-content-center">
+        <a href="" enctype="multipart/form-data" class="btn btn-primary">
+            <i class="bi bi-plus-circle-dotted"></i>
+            Añadir empleado
+        </a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 card-hover">
+                {% for employee in employees %}
+                    
+                    <div class="position-relative overflow-hidden hover-container">
+                        {% if employee.foto %}
+                            <img src="{{ employee.foto.url }}" class="card-img-top blur-target" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top blur-target d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        {% endif %}
+
+                        <div class="hover-overlay position-absolute top-50 start-50 translate-middle">
+                            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-dark rounded-pill">
+                                <i class="bi bi-eye-fill"></i> Ver detalles
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ employee.nombre }} {{ employee.apellidos }}</h5>
+                        <p class="card-text text-muted small">
+                            <span class="badge bg-light text-dark border">{{ employee.puesto }}</span>
+                        </p>
+                    </div>
+                {% endfor %}
+
+                <div class="card-footer bg-white d-flex justify-content-between border-0 pb-3">
+                    <a href="" class="btn btn-sm btn-warning">
+                        Editar
+                    </a>
+
+                    <a href="" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

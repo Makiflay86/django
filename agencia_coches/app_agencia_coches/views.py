@@ -36,3 +36,15 @@ def car_detail(request, pk):
     # Busca el coche por su ID (pk) o lanza un error 404 si no existe
     car = get_object_or_404(Cars, pk=pk)
     return render(request, 'cars/car_detail.html', {'car': car})
+
+
+
+# Tabla de trabajadores
+def employee (request):
+    employees = Employee.objects.all()
+    return render(request, 'employee/employee.html', {'employees':employees})
+
+def employee_detail(request, pk):
+    # Busca el empleado por su ID (pk) o lanza un error 404 si no existe
+    employee = get_object_or_404(Employee, pk=pk)
+    return render(request, 'employee/employee_detail.html', {'employee': employee})
