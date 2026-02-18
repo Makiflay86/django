@@ -42,6 +42,7 @@ urlpatterns = [
     path('extras_create/', views.extras_create, name='extras_create'),
 
     path('accounts/', include('django.contrib.auth.urls')),
+    path('register/', views.register, name='register'),
 ]
 
 

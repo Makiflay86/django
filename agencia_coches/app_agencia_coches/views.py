@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from .forms import *
 
@@ -12,6 +13,20 @@ def hola_mundo (request):
 @login_required
 def dashboard (request):
     return render(request,'index.html')
+
+
+# Forma para registrar un empleado en el login
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Aquí podrías crear el Employee automáticamente vinculado a este user
+            Employee.objects.create(user=user, nombre=user.username)
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
 
 
