@@ -49,29 +49,36 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-2">
-
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'employees' %}active fw-bold text-primary{% endif %}"
-                            href="{% url 'employees' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'employees' %}active fw-bold text-primary{% endif %}" href="{% url 'employees' %}">
                                 Employees
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'cars' %}active fw-bold text-primary{% endif %}"
-                            href="{% url 'cars' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'cars' %}active fw-bold text-primary{% endif %}" href="{% url 'cars' %}">
                                 Cars
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'extras' %}active fw-bold text-primary{% endif %}"
-                            href="{% url 'extras' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'extras' %}active fw-bold text-primary{% endif %}" href="{% url 'extras' %}">
                                 Extras
                             </a>
                         </li>
-
                     </ul>
+
+                    <div class="ms-auto d-flex align-items-center">
+                        {% if user.is_authenticated %}
+                            <span class="navbar-text me-1 text-dark">
+                                Hola, <strong>{{ user.username }}</strong>
+                            </span>
+                            <form action="{% url 'logout' %}" method="post" class="m-0">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">Cerrar sesión</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Iniciar Sesión</a>
+                        {% endif %}
+                    </div>
                 </div>
 
             </div>
