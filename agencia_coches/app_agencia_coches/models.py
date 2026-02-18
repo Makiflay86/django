@@ -1,9 +1,18 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
 
 
 # Tabla empleado
 class Employee (models.Model):
+
+    # Esto es para que el usuario pueda logearse
+    user = models.OneToOneField(
+        User, 
+        on_delete = models.CASCADE, 
+        null = True, 
+        blank = True
+    )
 
     # Nombre
     nombre = models.CharField (

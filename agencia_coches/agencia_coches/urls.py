@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 # Activamos el soporte de imágenes
 from django.conf import settings 
@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('hola_mundo/', views.hola_mundo),
-    path('home/', views.home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
     path('cars/', views.cars, name='cars'),
     path('cars_create/', views.cars_create, name='cars_create'),
@@ -40,6 +40,8 @@ urlpatterns = [
 
     path('extras/', views.extras, name='extras'),
     path('extras_create/', views.extras_create, name='extras_create'),
+
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 
