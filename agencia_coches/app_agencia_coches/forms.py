@@ -11,9 +11,13 @@ class CarsForm (forms.ModelForm):
 
 class EmployeesForm (forms.ModelForm):
 
+    # Añadimos campos que NO están en el modelo Employee pero queremos en el form
+    username = forms.CharField(label="Nombre de usuario", max_length=150)
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
+
     class Meta:
         model = Employee
-        fields='__all__'
+        fields = ['nombre', 'apellidos', 'puesto', 'foto']
 
 
 
