@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from .forms import *
 from django.forms import inlineformset_factory
-
-def hola_mundo (request):
-    return HttpResponse ("<h1>hola mundo</h1>")
+from django.contrib import messages # Importa los mensajes
 
 
 
@@ -21,8 +18,7 @@ def register(request):
     if request.method == 'POST':
         form = RegistroEmpleadoForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save() # Crea el usuario
-            # Creamos el perfil Employee automáticamente
+            user = form.save()
             Employee.objects.create(
                 user=user,
                 nombre=user.username,
@@ -30,9 +26,15 @@ def register(request):
                 puesto=form.cleaned_data.get('puesto'),
                 foto=form.cleaned_data.get('foto')
             )
+            # Añadimos un aviso para el usuario
+            messages.success(request, f'¡Bienvenido {user.username}! Tu cuenta ha sido creada. Ya puedes iniciar sesión.')
             return redirect('login')
+        else:
+            # Si hay errores, avisamos que algo falló
+            messages.error(request, 'Hubo un error en el registro. Revisa los datos.')
     else:
         form = RegistroEmpleadoForm()
+    
     return render(request, 'registration/register.html', {'form': form})
 
 

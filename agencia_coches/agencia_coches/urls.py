@@ -27,8 +27,7 @@ from app_agencia_coches import views # Importamos todas las vistas de nuestra ap
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('hola_mundo/', views.hola_mundo),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('', views.dashboard, name='dashboard'),
 
     path('cars/', views.cars, name='cars'),
     path('cars_create/', views.cars_create, name='cars_create'),
