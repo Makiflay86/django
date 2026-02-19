@@ -1,0 +1,40 @@
+/* Estructura para fijar el Sidebar */
+#wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 280px;
+    max-width: 280px;
+    height: 100vh; /* Ocupa todo el alto de la pantalla */
+    position: fixed; /* Se queda clavado en su sitio */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    background-color: #fff;
+    border-right: 1px solid #dee2e6;
+}
+
+/* El contenido principal debe "empujarse" a la derecha para no quedar debajo del sidebar */
+.main-content {
+    flex: 1;
+    margin-left: 280px; /* Exactamente el mismo ancho que el sidebar */
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Ajuste para móviles: quitamos el margen y el sidebar vuelve a ser oculto */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+    #sidebar {
+        margin-left: -280px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+}
