@@ -18,14 +18,20 @@ def dashboard (request):
 # Forma para registrar un empleado en el login
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistroEmpleadoForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            # Aquí podrías crear el Employee automáticamente vinculado a este user
-            Employee.objects.create(user=user, nombre=user.username)
+            user = form.save() # Crea el usuario
+            # Creamos el perfil Employee automáticamente
+            Employee.objects.create(
+                user=user,
+                nombre=user.username,
+                apellidos=form.cleaned_data.get('apellidos'),
+                puesto=form.cleaned_data.get('puesto'),
+                foto=form.cleaned_data.get('foto')
+            )
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = RegistroEmpleadoForm()
     return render(request, 'registration/register.html', {'form': form})
 
 

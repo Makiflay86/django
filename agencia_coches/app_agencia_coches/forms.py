@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import *
 
 class CarsForm (forms.ModelForm):
@@ -29,3 +30,15 @@ class ExtrasForm (forms.ModelForm):
     class Meta:
         model = Extra
         fields='__all__'
+
+
+
+class RegistroEmpleadoForm(UserCreationForm):
+    # Añadimos los campos extra de tu modelo Employee
+    apellidos = forms.CharField(max_length=100)
+    puesto = forms.CharField(max_length=100)
+    foto = forms.ImageField(required=False)
+
+    class Meta(UserCreationForm.Meta):
+        # Mantenemos los campos de User y añadimos los nuevos
+        fields = UserCreationForm.Meta.fields + ('apellidos', 'puesto', 'foto',)
