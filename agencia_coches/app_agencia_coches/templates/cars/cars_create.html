@@ -4,48 +4,10 @@
 <title>Añadir coche | Gestión Profesional</title>
 {% endblock title %}
 
-{% block content %}
-<style>
-    /* Estilos para la zona de carga elegante */
-    .upload-container {
-        border: 2px dashed #0d6efd;
-        background-color: #f8f9fa;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .upload-container:hover {
-        background-color: #e9ecef;
-        border-color: #0a58ca;
-    }
-    .preview-card {
-        transition: transform 0.2s;
-        border: none !important;
-    }
-    .preview-card:hover {
-        transform: scale(1.05);
-    }
-    .btn-delete {
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        border: none;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        line-height: 1;
-        transition: background 0.2s;
-    }
-    .btn-delete:hover {
-        background: #bb2d3b;
-    }
-    .img-preview {
-        height: 120px;
-        width: 100%;
-        object-fit: cover;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_cars_create.css' %}">
 
+{% block content %}
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
@@ -101,51 +63,5 @@
     </div>
 </div>
 
-<script>
-    const multiUpload = document.getElementById('multi_upload');
-    const previewContainer = document.getElementById('preview-container');
-    const formsetInputs = document.querySelectorAll('input[name$="-imagen"]');
-    let occupiedIndices = new Array(10).fill(false);
-
-    multiUpload.addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
-        files.forEach(file => {
-            const freeIndex = occupiedIndices.findIndex(status => status === false);
-            if (freeIndex !== -1 && freeIndex < 10) {
-                occupiedIndices[freeIndex] = true;
-                renderPreview(file, freeIndex);
-                const dt = new DataTransfer();
-                dt.items.add(file);
-                formsetInputs[freeIndex].files = dt.files;
-            }
-        });
-        this.value = "";
-    });
-
-    function renderPreview(file, index) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const div = document.createElement('div');
-            div.className = `col-6 col-md-4 col-lg-3 preview-item-${index}`;
-            div.innerHTML = `
-                <div class="preview-card position-relative">
-                    <img src="${e.target.result}" class="img-preview">
-                    <button type="button" onclick="removeFoto(${index})" 
-                            class="btn-delete position-absolute top-0 end-0 m-1 shadow-sm">
-                        &times;
-                    </button>
-                </div>
-            `;
-            previewContainer.appendChild(div);
-        }
-        reader.readAsDataURL(file);
-    }
-
-    function removeFoto(index) {
-        const element = document.querySelector(`.preview-item-${index}`);
-        if (element) element.remove();
-        formsetInputs[index].value = ""; 
-        occupiedIndices[index] = false;
-    }
-</script>
+<script src="{% static 'js/cars_create.js' %}"></script>
 {% endblock content %}
