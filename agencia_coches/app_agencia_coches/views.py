@@ -87,9 +87,10 @@ def employees_create(request):
         # Guardamos el Employee vinculándolo al usuario
         employee = form.save(commit = False)
         employee.user = user_creado
+        employee.nombre = username
         employee.save()
 
-        return redirect ('employee')
+        return redirect ('employees')
     else:
         form = EmployeesForm(data = request.POST)
         return render (request, 'employee/employees_create.html',{'employees_form': EmployeesForm})

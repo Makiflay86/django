@@ -17,7 +17,10 @@ class EmployeesForm (forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['nombre', 'apellidos', 'puesto', 'foto']
+        fields = ['apellidos', 'puesto', 'foto']
+
+    # Ordenando la salida del formulario
+    field_order = ['username', 'apellidos', 'password', 'puesto', 'foto']
 
 
 
