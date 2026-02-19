@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from .forms import *
+from django.forms import inlineformset_factory
 
 def hola_mundo (request):
     return HttpResponse ("<h1>hola mundo</h1>")
@@ -45,18 +46,30 @@ def cars (request):
 # Crear los coches
 @login_required
 def cars_create(request):
-    if request.method == 'GET':
-        return render(request, 'cars/cars_create.html', {'cars_form': CarsForm}) 
-    
+    # Creamos la fábrica para gestionar las 10 imágenes adicionales
+    ImageFormSet = inlineformset_factory(Cars, CarImages, fields=('imagen',), extra=10)
+
     if request.method == 'POST':
         form = CarsForm(request.POST, request.FILES)
-    
-    if form.is_valid():
-        form.save()
-        return redirect ('cars')
+        formset = ImageFormSet(request.POST, request.FILES)
+
+        if form.is_valid() and formset.is_valid():
+            # Guardamos el coche y obtenemos el objeto creado
+            coche = form.save()
+            
+            # Guardamos las imágenes del formset vinculándolas al coche
+            instancias_fotos = formset.save(commit=False)
+            for foto in instancias_fotos:
+                foto.car = coche # Asignamos el coche recién creado
+                foto.save()
+                
+            return redirect('cars')
     else:
-        form = CarsForm(data = request.POST)
-        return render (request, 'cars/cars_create.html',{'cars_form': CarsForm})
+        # En GET, enviamos los formularios vacíos
+        form = CarsForm()
+        formset = ImageFormSet()
+
+    return render(request, 'cars/cars_create.html', {'cars_form': form,'formset': formset})
     
 @login_required
 def car_detail(request, pk):

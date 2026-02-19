@@ -34,71 +34,68 @@
 
     <body>
        
-        {%block navbar%}
-        <!-- NavBar -->
-        <nav class="navbar navbar-expand-lg bg-primary-subtle shadow" style="padding-top: 0.3rem; padding-bottom: 0.3rem;">
-            <div class="container-fluid">
+        <nav class="navbar navbar-light bg-light d-md-none border-bottom px-3 sticky-top">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+            <span class="fw-bold">AutoManage</span>
+        </nav>
 
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
-                    <i class="bi bi-car-front-fill fs-3"></i>
-                </a>
-
-                <button class="navbar-toggler py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-2">
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'employees' %}active fw-bold text-primary{% endif %}" href="{% url 'employees' %}">
-                                Employees
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'cars' %}active fw-bold text-primary{% endif %}" href="{% url 'cars' %}">
-                                Cars
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'extras' %}active fw-bold text-primary{% endif %}" href="{% url 'extras' %}">
-                                Extras
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="ms-auto d-flex align-items-center">
-                        {% if user.is_authenticated %}
-                            <span class="navbar-text me-1 text-dark">
-                                Hola, <strong>{{ user.username }}</strong>
-                            </span>
-                            <form action="{% url 'logout' %}" method="post" class="m-0">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">Cerrar sesión</button>
-                            </form>
-                        {% else %}
-                            <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Iniciar Sesión</a>
-                        {% endif %}
-                    </div>
+        <div id="wrapper">
+            <nav id="sidebar" class="bg-white shadow d-flex flex-column p-3 sticky-top">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                    <a href="{% url 'dashboard' %}" class="d-flex align-items-center text-decoration-none">
+                        <i class="bi bi-car-front-fill fs-2 text-primary me-2"></i>
+                        <span class="fs-4 fw-bold text-dark">AutoManage</span>
+                    </a>
+                    <button type="button" class="btn-close d-md-none" id="closeSidebar"></button>
                 </div>
 
-            </div>
-        </nav>
-        {%endblock navbar%}
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'employees' %}active{% endif %}" href="{% url 'employees' %}">
+                            <i class="bi bi-people-fill me-2"></i> Employees
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'cars' %}active{% endif %}" href="{% url 'cars' %}">
+                            <i class="bi bi-truck me-2"></i> Cars
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'extras' %}active{% endif %}" href="{% url 'extras' %}">
+                            <i class="bi bi-plus-circle-fill me-2"></i> Extras
+                        </a>
+                    </li>
+                </ul>
 
+                <hr>
+                <div class="dropdown">
+                    {% if user.is_authenticated %}
+                        <div class="p-2 bg-light rounded mb-2 text-center">
+                            <small class="text-muted d-block small">Usuario: <strong>{{ user.username }}</strong></small>
+                        </div>
+                        <form action="{% url 'logout' %}" method="post" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger w-100 btn-sm">Cerrar sesión</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </nav>
 
-        {%block content%}
+            <main class="main-content w-100 bg-light p-3 p-md-5">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
 
-        {%endblock content%}
+        <script>
+            
+        </script>
+
 
 
         {%block footer%}
-        <footer class="mt-5 p-2 text-center border rounded bg-primary-subtle fixed-bottom d-none d-md-block">
-            <h6>
-                Realizado por<br> Francisco Aybar Romero
-            </h6>
-        </footer>
-
-        <footer class="mt-5 p-2 text-center border rounded bg-primary-subtle d-block d-md-none">
+        <footer class="mt-5 p-2 text-center border rounded bg-primary-subtle">
             <h6>
                 Realizado por<br> Francisco Aybar Romero
             </h6>
@@ -119,6 +116,9 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+
+        <script src="{% static 'js/sidebar.js' %}"></script>
         {% endblock js %}
+
     </body>
 </html>

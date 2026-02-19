@@ -1,35 +1,151 @@
-{%extends 'index.html'%}
+{% extends 'index.html' %}
 
-{%block title%}
-<title>Añadir coche</title>
-{%endblock title%}
+{% block title %}
+<title>Añadir coche | Gestión Profesional</title>
+{% endblock title %}
 
-{%block content%}
+{% block content %}
+<style>
+    /* Estilos para la zona de carga elegante */
+    .upload-container {
+        border: 2px dashed #0d6efd;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .upload-container:hover {
+        background-color: #e9ecef;
+        border-color: #0a58ca;
+    }
+    .preview-card {
+        transition: transform 0.2s;
+        border: none !important;
+    }
+    .preview-card:hover {
+        transform: scale(1.05);
+    }
+    .btn-delete {
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        line-height: 1;
+        transition: background 0.2s;
+    }
+    .btn-delete:hover {
+        background: #bb2d3b;
+    }
+    .img-preview {
+        height: 120px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+</style>
+
 <div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
+        <div class="col-12 col-lg-10">
 
-            <section class="bg-light rounded shadow my-5">
-                <div class="text-center py-2 border-bottom border-danger">
-                    <h1>Añadir coche</h1>
+            <section class="bg-white rounded-4 shadow-lg overflow-hidden">
+                <div class="bg-info-subtle text-black text-center py-3">
+                    <h2 class="mb-0 fw-bold text-uppercase">Nuevo Vehículo</h2>
                 </div>
-                <article class="bg-info-subtle p-4">
-
-                    <form action="" method="POST" class="form" enctype="multipart/form-data">
+                
+                <article class="bg-info-subtle p-4 p-md-5">
+                    <form action="" method="POST" id="car-form" enctype="multipart/form-data">
+                        {% csrf_token %}
                         
-                        {%csrf_token%}
-                        {{cars_form}}
-
-                        <div class="my-3">
-                            <a href="{% url 'cars' %}" class="btn btn-danger">← Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        <div class="card border-0 shadow-sm p-4 mb-4 rounded-3">
+                            <h5 class="text-primary fw-bold mb-4 border-bottom pb-2">
+                                <i class="bi bi-info-circle"></i> Información General
+                            </h5>
+                            {{ cars_form.as_p }}
                         </div>
 
-                    </form>
+                        <div class="card border-0 shadow-sm p-4 mb-4 rounded-3">
+                            <h5 class="text-primary fw-bold mb-4 border-bottom pb-2">
+                                <i class="bi bi-images"></i> Galería de Imágenes
+                            </h5>
+                            
+                            {{ formset.management_form }}
+                            
+                            <div class="upload-container rounded-3 p-5 text-center mb-4" onclick="document.getElementById('multi_upload').click()">
+                                <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
+                                <p class="mt-2 mb-0 fw-bold">Arrastra las fotos aquí o haz clic para buscar</p>
+                                <p class="text-muted small">Máximo 10 imágenes adicionales</p>
+                                <input type="file" id="multi_upload" class="d-none" multiple accept="image/*">
+                            </div>
 
+                            <div id="preview-container" class="row g-3">
+                                </div>
+
+                            <div id="hidden-inputs" class="d-none">
+                                {% for form in formset %}
+                                    {{ form.imagen }}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="{% url 'cars' %}" class="btn btn-outline-secondary btn-lg px-4 flex-grow-1">Cancelar</a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 flex-grow-1 fw-bold">Guardar Coche</button>
+                        </div>
+                    </form>
                 </article>
             </section>
         </div>
     </div>
 </div>
-{%endblock content%}
+
+<script>
+    const multiUpload = document.getElementById('multi_upload');
+    const previewContainer = document.getElementById('preview-container');
+    const formsetInputs = document.querySelectorAll('input[name$="-imagen"]');
+    let occupiedIndices = new Array(10).fill(false);
+
+    multiUpload.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            const freeIndex = occupiedIndices.findIndex(status => status === false);
+            if (freeIndex !== -1 && freeIndex < 10) {
+                occupiedIndices[freeIndex] = true;
+                renderPreview(file, freeIndex);
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                formsetInputs[freeIndex].files = dt.files;
+            }
+        });
+        this.value = "";
+    });
+
+    function renderPreview(file, index) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = `col-6 col-md-4 col-lg-3 preview-item-${index}`;
+            div.innerHTML = `
+                <div class="preview-card position-relative">
+                    <img src="${e.target.result}" class="img-preview">
+                    <button type="button" onclick="removeFoto(${index})" 
+                            class="btn-delete position-absolute top-0 end-0 m-1 shadow-sm">
+                        &times;
+                    </button>
+                </div>
+            `;
+            previewContainer.appendChild(div);
+        }
+        reader.readAsDataURL(file);
+    }
+
+    function removeFoto(index) {
+        const element = document.querySelector(`.preview-item-${index}`);
+        if (element) element.remove();
+        formsetInputs[index].value = ""; 
+        occupiedIndices[index] = false;
+    }
+</script>
+{% endblock content %}
