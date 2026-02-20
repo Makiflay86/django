@@ -43,6 +43,8 @@ urlpatterns = [
 
     path('extras/', views.extras, name='extras'),
     path('extras_create/', views.extras_create, name='extras_create'),
+    path('extras_edit/<int:pk>/', views.extras_edit, name='extras_edit'),
+    path('extras_delete/<int:pk>/', views.extras_delete, name='extras_delete'),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', views.register, name='register'),

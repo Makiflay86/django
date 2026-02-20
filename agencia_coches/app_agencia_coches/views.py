@@ -231,4 +231,24 @@ def extras_create(request):
     else:
         form = ExtrasForm(data = request.POST)
         return render (request, 'extras/extras_create.html',{'extras_form': ExtrasForm})
-    
+
+# Editar extra
+@login_required
+def extras_edit(request, pk):
+    extra = get_object_or_404(Extra, pk=pk)
+    if request.method == 'POST':
+        form = ExtrasForm(request.POST, instance=extra)
+        if form.is_valid():
+            form.save()
+            return redirect('extras')
+    else:
+        form = ExtrasForm(instance=extra)
+    return render(request, 'extras/extras_edit.html', {'form': form, 'extra': extra})
+
+# Eliminar extra
+@login_required
+def extras_delete(request, pk):
+    if request.method == 'POST':
+        extra = get_object_or_404(Extra, pk=pk)
+        extra.delete()
+    return redirect('extras')

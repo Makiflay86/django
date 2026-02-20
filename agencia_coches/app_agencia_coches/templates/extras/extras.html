@@ -25,15 +25,37 @@
                     </div>
 
                     <div class="card-footer bg-white d-flex justify-content-between border-0 pb-3 shadow">
-                        <a href="" class="btn btn-sm btn-warning">
+                        <a href="{% url 'extras_edit' extra.id %}" class="btn btn-sm btn-warning">
                             Editar
                         </a>
 
-                        <a href="" class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteExtraModal{{ extra.id }}">
+                            <i class="bi bi-trash-fill"></i>
+                            Eliminar
+                        </button>
                     </div>
 
+                </div>
+            </div>
+
+            <div class="modal fade" id="deleteExtraModal{{ extra.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow rounded-4">
+                        <div class="modal-body p-4 text-center">
+                            <div class="text-danger mb-3">
+                                <i class="bi bi-exclamation-octagon-fill display-4"></i>
+                            </div>
+                            <h5 class="fw-bold">¿Confirmar eliminación?</h5>
+                            <p class="text-muted small">Vas a eliminar <strong>{{ extra.nombre }}</strong>. Esta acción es irreversible.</p>
+                            <form action="{% url 'extras_delete' extra.id %}" method="POST" class="mt-4">
+                                {% csrf_token %}
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-light w-100 rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold">Eliminar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
