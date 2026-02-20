@@ -1,7 +1,11 @@
 {% extends "index.html" %}
+
+{% load static %}
 {% load humanize %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/cars_edit.css' %}">
+
 <div class="container mt-5 mb-5 px-3 px-lg-0">
     <div class="row g-4">
         <div class="col-md-5">
@@ -120,121 +124,5 @@
     </div>
 </div>
 
-<style>
-    input[type="text"], input[type="number"], input[type="date"], input[type="file"], select, textarea { 
-        display: block; width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid #eee; background: #fcfcfc; transition: 0.3s;
-    }
-    input[type="file"]::file-selector-button {
-        background: #212529; color: white; border: none; border-radius: 8px; padding: 4px 12px; margin-right: 10px; cursor: pointer;
-    }
-    .upload-drop-area { background: #fafafa; cursor: pointer; transition: 0.3s; }
-    .upload-drop-area:hover { background: #fff5f5; border-color: #dc3545 !important; }
-    .gallery-item .delete-overlay {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        display: flex; align-items: center; justify-content: center;
-        background: rgba(0,0,0,0.2); transition: 0.3s; opacity: 0; border-radius: 6px;
-    }
-    .gallery-item:hover .delete-overlay { opacity: 1; }
-    .delete-checkbox:checked + label { background: #000 !important; border-color: #000; }
-    .gallery-item:has(.delete-checkbox:checked) img { border: 2px solid #dc3545; opacity: 0.4; filter: grayscale(1); }
-    .thumb-selector.active { border: 2px solid #dc3545 !important; opacity: 1; }
-    .new-preview-item { position: relative; width: 65px; height: 65px; }
-    .remove-new { position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; }
-</style>
-
-<script>
-    const mainImgInput = document.querySelector('input[name="imagen"]');
-    const fileStatus = document.getElementById('file-status');
-    const btnRemoveMain = document.getElementById('btnRemoveMain');
-    const clearImgCheckbox = document.getElementById('imagen-clear_id');
-
-    // 1. Lógica Imagen Principal (Carrusel Dinámico)
-    if (mainImgInput) {
-        mainImgInput.addEventListener('change', function(e) {
-            if (this.files && this.files[0]) {
-                const newImgUrl = URL.createObjectURL(this.files[0]);
-                const mainItem = document.getElementById('mainItem');
-                const thumbContainer = document.getElementById('thumbContainer');
-                
-                fileStatus.innerHTML = `<i class="bi bi-arrow-repeat"></i> Nueva: ${this.files[0].name}`;
-                fileStatus.className = "small fw-bold text-primary";
-                btnRemoveMain.style.display = "block";
-                if(clearImgCheckbox) clearImgCheckbox.checked = false;
-
-                // Actualizar carrusel
-                mainItem.innerHTML = `<img src="${newImgUrl}" class="d-block w-100" id="mainImgPreview" style="height: 380px; object-fit: cover;">`;
-
-                // Actualizar o crear miniatura
-                let existingMainThumb = document.getElementById('mainThumb');
-                if (existingMainThumb) {
-                    existingMainThumb.src = newImgUrl;
-                    existingMainThumb.style.display = "block";
-                } else {
-                    const newThumb = document.createElement('img');
-                    newThumb.id = "mainThumb";
-                    newThumb.src = newImgUrl;
-                    newThumb.className = "rounded border shadow-sm thumb-selector active";
-                    newThumb.style = "width: 70px; height: 50px; object-fit: cover; cursor: pointer;";
-                    newThumb.setAttribute('data-bs-target', '#carGallery');
-                    newThumb.setAttribute('data-bs-slide-to', "0");
-                    thumbContainer.prepend(newThumb);
-                }
-            }
-        });
-    }
-
-    // 2. Botón Eliminar Principal
-    if (btnRemoveMain) {
-        btnRemoveMain.addEventListener('click', function() {
-            mainImgInput.value = ""; 
-            if(clearImgCheckbox) clearImgCheckbox.checked = true;
-            fileStatus.innerHTML = `<i class="bi bi-x-circle-fill"></i> Marcada para eliminar`;
-            fileStatus.className = "small fw-bold text-danger";
-            document.getElementById('mainItem').innerHTML = `<div class="bg-light d-flex justify-content-center align-items-center" style="height: 380px;"><i class="bi bi-camera fs-1 text-secondary opacity-50"></i></div>`;
-            if(document.getElementById('mainThumb')) document.getElementById('mainThumb').style.display = "none";
-            this.style.display = "none";
-        });
-    }
-
-    // 3. Imágenes adicionales (Drop area)
-    let selectedFiles = [];
-    const imageInput = document.getElementById('imageInput');
-    const previewContainer = document.getElementById('previewContainer');
-
-    imageInput.addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
-        files.forEach(file => {
-            selectedFiles.push(file);
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const div = document.createElement('div');
-                div.className = 'new-preview-item';
-                div.innerHTML = `<img src="${event.target.result}" class="rounded border shadow-sm w-100 h-100" style="object-fit: cover;"><div class="remove-new"><i class="bi bi-trash"></i></div>`;
-                div.querySelector('.remove-new').onclick = function() {
-                    selectedFiles = selectedFiles.filter(f => f !== file);
-                    div.remove();
-                    updateInputFiles();
-                };
-                previewContainer.appendChild(div);
-            }
-            reader.readAsDataURL(file);
-        });
-        updateInputFiles();
-    });
-
-    function updateInputFiles() {
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => dataTransfer.items.add(file));
-        imageInput.files = dataTransfer.files;
-    }
-
-    // 4. Sincronización miniaturas carrusel
-    var carGallery = document.getElementById('carGallery');
-    carGallery.addEventListener('slid.bs.carousel', function () {
-        document.querySelectorAll('.thumb-selector').forEach(el => el.classList.remove('active'));
-        let activeIdx = Array.from(document.querySelectorAll('.carousel-item')).indexOf(document.querySelector('.carousel-item.active'));
-        const targetThumb = document.querySelectorAll('.thumb-selector')[activeIdx];
-        if (targetThumb) targetThumb.classList.add('active');
-    });
-</script>
+<script src="{% static "js/cars_edit.js" %}"></script>
 {% endblock content %}
