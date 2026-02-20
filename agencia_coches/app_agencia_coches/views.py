@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 from django.forms import inlineformset_factory
 from django.contrib import messages # Importa los mensajes
-
-
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 @login_required
 def dashboard(request):
@@ -157,6 +156,40 @@ def employees_create(request):
     else:
         form = EmployeesForm(data = request.POST)
         return render (request, 'employee/employees_create.html',{'employees_form': EmployeesForm})
+
+@login_required
+# Editar empleado
+def employee_edit(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    if request.method == "POST":
+        form = EmployeesForm(request.POST, request.FILES, instance=employee)
+        if form.is_valid():
+            new_password = form.cleaned_data.get('password')
+            user = employee.user
+            
+            # Si el usuario escribió algo en el campo contraseña...
+            if new_password:
+                try:
+                    # Validamos la contraseña contra las reglas de settings.py
+                    validate_password(new_password, user)
+                    user.set_password(new_password)
+                    user.save()
+                except ValidationError as e:
+                    # Si no cumple los requisitos, añadimos el error al formulario
+                    form.add_error('password', e)
+                    return render(request, 'employee/employee_edit.html', {'form': form, 'employee': employee})
+
+            form.save()
+            messages.success(request, f"Perfil de {user.username} actualizado correctamente.")
+            return redirect('employees')
+    else:
+        # Cargamos el nombre y el username como hicimos antes
+        form = EmployeesForm(instance=employee, initial={
+            'username': employee.user.username,
+            'nombre': employee.nombre,
+        })
+    
+    return render(request, 'employee/employee_edit.html', {'form': form, 'employee': employee})
 
 @login_required
 # Eliminar empleado
