@@ -47,9 +47,34 @@
                             Editar
                         </a>
                         
-                        <a href="" class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteEmpModal{{ employee.pk }}">
+                            <i class="bi bi-person-x"></i> Dar de baja
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="deleteEmpModal{{ employee.pk }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <div class="modal-header bg-dark text-white rounded-top-4 p-4">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-person-dash-fill me-2 text-danger"></i>¿Eliminar Empleado?</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body p-4 text-center">
+                            {% if employee.foto %}
+                                <img src="{{ employee.foto.url }}" class="rounded-circle mb-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
+                            {% endif %}
+                            <p class="fs-5 mb-1">Vas a eliminar a <strong>{{ employee.user.username }}</strong></p>
+                            <p class="text-muted small">Se perderá el acceso de este usuario al panel de control de la agencia.</p>
+                        </div>
+                        <div class="modal-footer border-0 p-4 pt-0 d-flex justify-content-center">
+                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                            <form action="{% url 'employee_delete' employee.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">Confirmar Baja</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

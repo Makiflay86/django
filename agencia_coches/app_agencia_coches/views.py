@@ -159,6 +159,17 @@ def employees_create(request):
         return render (request, 'employee/employees_create.html',{'employees_form': EmployeesForm})
 
 @login_required
+# Eliminar empleado
+def employee_delete(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    if request.method == "POST":
+        nombre = employee.user.username
+        employee.delete()
+        messages.warning(request, f"El empleado {nombre} ha sido dado de baja.")
+        return redirect('employees')
+    return redirect('employees')
+
+@login_required
 def employee_detail(request, pk):
     # Busca el empleado por su ID (pk) o lanza un error 404 si no existe
     employee = get_object_or_404(Employee, pk=pk)
