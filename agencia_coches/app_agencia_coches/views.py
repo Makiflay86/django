@@ -91,11 +91,25 @@ def cars_create(request):
 @login_required
 def cars_edit(request, pk):
     car = get_object_or_404(Cars, pk=pk)
+    
     if request.method == "POST":
         form = CarsForm(request.POST, request.FILES, instance=car)
+        
+        # 1. Gestionar eliminación de imágenes existentes del servidor
+        imagenes_a_borrar = request.POST.getlist('borrar_imagenes')
+        if imagenes_a_borrar:
+            # Esto elimina el registro y, dependiendo de tu config, el archivo físico
+            car.imagenes_adicionales.filter(id__in=imagenes_a_borrar).delete()
+            
         if form.is_valid():
             form.save()
-            messages.success(request, f"¡El {car.marca} se ha actualizado correctamente!")
+            
+            # 2. Gestionar subida de nuevas imágenes adicionales
+            nuevas_fotos = request.FILES.getlist('nuevas_imagenes')
+            for foto in nuevas_fotos:
+                CarImages.objects.create(car=car, imagen=foto)
+            
+            messages.success(request, f"¡El {car.marca} y su galería se han actualizado correctamente!")
             return redirect('cars')
     else:
         form = CarsForm(instance=car)
