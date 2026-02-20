@@ -1,0 +1,61 @@
+.upload-drop-area {
+    background: #fafafa;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-drop-area:hover {
+    background: #fff5f5;
+    border-color: #dc3545 !important;
+}
+
+.new-preview-item {
+    position: relative;
+    width: 65px;
+    height: 65px;
+}
+
+.remove-new {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+.thumb-selector {
+    width: 70px;
+    height: 50px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.thumb-selector.active {
+    border: 2px solid #dc3545 !important;
+    opacity: 1;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: #fcfcfc;
+}
