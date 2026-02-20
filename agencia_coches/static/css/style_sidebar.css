@@ -7,8 +7,10 @@
 #sidebar {
     min-width: 280px;
     max-width: 280px;
-    height: 100vh; /* Ocupa todo el alto de la pantalla */
-    position: fixed; /* Se queda clavado en su sitio */
+    height: 100vh;
+    /* Ocupa todo el alto de la pantalla */
+    position: fixed;
+    /* Se queda clavado en su sitio */
     top: 0;
     left: 0;
     display: flex;
@@ -18,10 +20,13 @@
     border-right: 1px solid #dee2e6;
 }
 
+
+
 /* El contenido principal debe "empujarse" a la derecha para no quedar debajo del sidebar */
 .main-content {
     flex: 1;
-    margin-left: 280px; /* Exactamente el mismo ancho que el sidebar */
+    margin-left: 280px;
+    /* Exactamente el mismo ancho que el sidebar */
     min-height: 100vh;
     background-color: #f8f9fa;
 }
@@ -31,10 +36,53 @@
     .main-content {
         margin-left: 0;
     }
+
     #sidebar {
         margin-left: -280px;
     }
+
     #sidebar.active {
         margin-left: 0;
     }
+}
+
+/* Reset de Sidebar */
+#sidebar {
+    /* Negro Antracita AutoManage */
+    transition: all 0.3s ease;
+}
+
+/* Enlaces Personalizados */
+.custom-nav-link {
+    color: #000 !important;
+    font-weight: 500;
+    border-radius: 12px !important;
+    /* Match con tus inputs */
+    padding: 12px 18px !important;
+    transition: all 0.2s ease;
+}
+
+/* Hover: Rojo sutil */
+.custom-nav-link:hover {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    color: #dc3545 !important;
+    transform: translateX(5px);
+}
+
+/* Estado Activo: El Rojo de la marca */
+.custom-nav-link.active {
+    background-color: #dc3545 !important;
+    color: white !important;
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.25) !important;
+}
+
+.custom-nav-link i {
+    font-size: 1.1rem;
+}
+
+/* Animación para el botón de logout */
+.btn-outline-danger:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
