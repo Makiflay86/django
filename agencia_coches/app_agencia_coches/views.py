@@ -9,8 +9,23 @@ from django.contrib import messages # Importa los mensajes
 
 
 @login_required
-def dashboard (request):
-    return render(request,'index.html')
+def dashboard(request):
+    # Conteos totales
+    total_cars = Cars.objects.count()
+    total_employees = Employee.objects.count()
+    
+    # Últimas incorporaciones (limitado a los 5 más recientes)
+    recent_cars = Cars.objects.all().order_by('-id')[:5]
+    recent_employees = Employee.objects.all().order_by('-id')[:5]
+    
+    context = {
+        'total_cars': total_cars,
+        'total_employees': total_employees,
+        'recent_cars': recent_cars,
+        'recent_employees': recent_employees,
+    }
+    return render(request, 'index.html', context)
+
 
 
 # Forma para registrar un empleado en el login
