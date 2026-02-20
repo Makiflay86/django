@@ -8,11 +8,13 @@ class CarsForm (forms.ModelForm):
         model = Cars
         fields='__all__'
         widgets = {
+            'imagen': forms.FileInput(attrs={'class': 'form-control'}),
             'fecha_fabricacion': forms.DateInput(
+                format='%Y-%m-%d',
                 attrs={
                     'type': 'date', 
-                    'class': 'form-control', 
-                    'style': 'background: #fcfcfc; border-radius: 12px; border: 1px solid #eee; padding: 0.75rem 1rem;'
+                    'class': 'form-control',
+                    'style': 'background: #fcfcfc; border-radius: 12px;'
                 }
             ),
         }
