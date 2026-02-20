@@ -87,7 +87,20 @@ def cars_create(request):
         formset = ImageFormSet()
 
     return render(request, 'cars/cars_create.html', {'cars_form': form,'formset': formset})
+
+def cars_edit(request, pk):
+    car = get_object_or_404(Cars, pk=pk)
+    if request.method == "POST":
+        form = CarsForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"¡El {car.marca} se ha actualizado correctamente!")
+            return redirect('cars')
+    else:
+        form = CarsForm(instance=car)
     
+    return render(request, 'cars/cars_edit.html', {'form': form, 'car': car})
+
 @login_required
 def car_detail(request, pk):
     # Busca el coche por su ID (pk) o lanza un error 404 si no existe
