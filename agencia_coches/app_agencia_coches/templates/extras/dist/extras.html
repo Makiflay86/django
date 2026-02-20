@@ -7,10 +7,9 @@
 {%block content%}
 <div class="container">
 
-    <div class="my-3 d-flex justify-content-center">
-        <a href="{% url 'extras_create' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle-dotted"></i>
-            Añadir extra
+    <div class="my-5 d-flex justify-content-center">
+        <a href="{% url 'extras_create' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow">
+            <i class="bi bi-plus-circle-dotted"></i> Añadir extra
         </a>
     </div>
 
@@ -25,8 +24,8 @@
                     </div>
 
                     <div class="card-footer bg-white d-flex justify-content-between border-0 pb-3 shadow">
-                        <a href="{% url 'extras_edit' extra.id %}" class="btn btn-sm btn-warning">
-                            Editar
+                        <a href="{% url 'extras_edit' extra.id %}" class="btn btn-sm btn-warning rounded-4">
+                            <i class="bi bi-pencil me-2"></i> Editar
                         </a>
 
                         <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteExtraModal{{ extra.id }}">

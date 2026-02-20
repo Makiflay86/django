@@ -7,10 +7,9 @@
 {% block content %}
 <div class="container">
 
-    <div class="my-3 d-flex justify-content-center">
-        <a href="{% url 'employees_create' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle-dotted"></i>
-            Añadir empleado
+    <div class="my-5 d-flex justify-content-center">
+        <a href="{% url 'employees_create' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow">
+            <i class="bi bi-plus-circle-dotted"></i> Añadir empleado
         </a>
     </div>
 
@@ -43,8 +42,8 @@
                     </div>
                     
                     <div class="card-footer bg-white d-flex justify-content-between border-0 pb-3 shadow">
-                        <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-sm btn-warning">
-                            Editar
+                        <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-sm btn-warning rounded-4">
+                            <i class="bi bi-pencil me-2"></i> Editar
                         </a>
                         
                         <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteEmpModal{{ employee.pk }}">
