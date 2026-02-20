@@ -1,67 +1,160 @@
-{% extends 'index.html' %}
-
-{% block title %}
-<title>Añadir coche | Gestión Profesional</title>
-{% endblock title %}
-
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/style_cars_create.css' %}">
+{% extends "index.html" %}
+{% load humanize %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-
-            <section class="bg-white rounded-4 shadow-lg overflow-hidden">
-                <div class="bg-info-subtle text-black text-center py-3">
-                    <h2 class="mb-0 fw-bold text-uppercase">Nuevo Vehículo</h2>
-                </div>
-                
-                <article class="bg-info-subtle p-4 p-md-5">
-                    <form action="" method="POST" id="car-form" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <div class="card border-0 shadow-sm p-4 mb-4 rounded-3">
-                            <h5 class="text-primary fw-bold mb-4 border-bottom pb-2">
-                                <i class="bi bi-info-circle"></i> Información General
-                            </h5>
-                            {{ cars_form.as_p }}
-                        </div>
-
-                        <div class="card border-0 shadow-sm p-4 mb-4 rounded-3">
-                            <h5 class="text-primary fw-bold mb-4 border-bottom pb-2">
-                                <i class="bi bi-images"></i> Galería de Imágenes
-                            </h5>
-                            
-                            {{ formset.management_form }}
-                            
-                            <div class="upload-container rounded-3 p-5 text-center mb-4" onclick="document.getElementById('multi_upload').click()">
-                                <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
-                                <p class="mt-2 mb-0 fw-bold">Arrastra las fotos aquí o haz clic para buscar</p>
-                                <p class="text-muted small">Máximo 10 imágenes adicionales</p>
-                                <input type="file" id="multi_upload" class="d-none" multiple accept="image/*">
-                            </div>
-
-                            <div id="preview-container" class="row g-3">
+<div class="container mt-5 mb-5 px-3 px-lg-0">
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="sticky-top" style="top: 2rem;">
+                <div class="card shadow-lg border-0 overflow-hidden rounded-4">
+                    <div id="carGallery" class="carousel slide carousel-fade" data-bs-ride="false">
+                        <div class="carousel-inner" id="mainCarouselInner">
+                            <div class="carousel-item active" id="emptyState">
+                                <div class="bg-light d-flex justify-content-center align-items-center" style="height: 380px;">
+                                    <i class="bi bi-camera fs-1 text-secondary opacity-50"></i>
                                 </div>
-
-                            <div id="hidden-inputs" class="d-none">
-                                {% for form in formset %}
-                                    {{ form.imagen }}
-                                {% endfor %}
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div id="thumbContainer" class="d-flex gap-2 mt-3 flex-wrap justify-content-start overflow-auto p-1"></div>
+            </div>
+        </div>
 
-                        <div class="d-flex gap-3 mt-4">
-                            <a href="{% url 'cars' %}" class="btn btn-outline-secondary btn-lg px-4 flex-grow-1">Cancelar</a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5 flex-grow-1 fw-bold">Guardar Coche</button>
+        <div class="col-md-7">
+            <form method="POST" enctype="multipart/form-data" id="carForm">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                
+                <div class="card shadow-lg border-0 rounded-4 mb-4">
+                    <div class="card-header bg-dark text-white p-4">
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2 text-danger"></i>Nuevo Vehículo</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            {% for field in cars_form %}
+                                <div class="col-md-6 mb-3">
+                                    <label class="fw-bold small text-dark opacity-75">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
                         </div>
-                    </form>
-                </article>
-            </section>
+                    </div>
+                </div>
+
+                <div class="card shadow-lg border-0 rounded-4 mb-4">
+                    <div class="card-header bg-light p-4">
+                        <h5 class="mb-0 fw-bold text-dark">Galería Adicional</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <label for="imageInput" class="upload-drop-area d-flex flex-column align-items-center justify-content-center border border-2 border-dashed rounded-4 p-4 text-center">
+                            <i class="bi bi-cloud-arrow-up fs-2 text-danger mb-2"></i>
+                            <span class="fw-bold">Añadir más fotos</span>
+                            <input type="file" id="imageInput" multiple class="d-none" accept="image/*">
+                        </label>
+                        <div id="previewContainer" class="d-flex gap-2 flex-wrap mt-3"></div>
+                        <div class="d-none" id="hiddenFormset">
+                            {% for form in formset %}{{ form.imagen }}{% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-end mb-5">
+                    <a href="{% url 'cars' %}" class="btn btn-light rounded-pill px-4 border">Cancelar</a>
+                    <button type="submit" class="btn btn-danger rounded-pill px-5 fw-bold shadow">Crear Coche</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script src="{% static 'js/cars_create.js' %}"></script>
+<style>
+    .upload-drop-area { background: #fafafa; cursor: pointer; transition: 0.3s; }
+    .upload-drop-area:hover { background: #fff5f5; border-color: #dc3545 !important; }
+    .new-preview-item { position: relative; width: 65px; height: 65px; }
+    .remove-new { position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; }
+    .thumb-selector { width: 70px; height: 50px; object-fit: cover; cursor: pointer; border: 1px solid #dee2e6; border-radius: 4px; opacity: 0.6; transition: 0.3s; }
+    .thumb-selector.active { border: 2px solid #dc3545 !important; opacity: 1; }
+    input[type="text"], input[type="number"], select, input[type="file"] { display: block; width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid #eee; background: #fcfcfc; }
+</style>
+
+<script>
+    let selectedFiles = [];
+    let mainFile = null;
+    const mainInput = document.querySelector('input[name="imagen"]');
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const thumbContainer = document.getElementById('thumbContainer');
+    const carouselInner = document.getElementById('mainCarouselInner');
+    const formsetInputs = document.querySelectorAll('#hiddenFormset input[type="file"]');
+
+    mainInput.addEventListener('change', e => {
+        mainFile = e.target.files[0];
+        refreshVisuals();
+    });
+
+    imageInput.addEventListener('change', e => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            if (selectedFiles.length < formsetInputs.length) {
+                selectedFiles.push(file);
+                const div = document.createElement('div');
+                div.className = 'new-preview-item';
+                div.innerHTML = `<img src="${URL.createObjectURL(file)}" class="rounded border w-100 h-100" style="object-fit: cover;"><div class="remove-new"><i class="bi bi-trash"></i></div>`;
+                div.querySelector('.remove-new').onclick = () => {
+                    selectedFiles = selectedFiles.filter(f => f !== file);
+                    div.remove();
+                    syncFormset();
+                    refreshVisuals();
+                };
+                previewContainer.appendChild(div);
+            }
+        });
+        syncFormset();
+        refreshVisuals();
+    });
+
+    function syncFormset() {
+        formsetInputs.forEach((input, i) => {
+            const dt = new DataTransfer();
+            if (selectedFiles[i]) dt.items.add(selectedFiles[i]);
+            input.files = dt.files;
+        });
+    }
+
+    function refreshVisuals() {
+        carouselInner.innerHTML = '';
+        thumbContainer.innerHTML = '';
+        let allImages = [];
+        if (mainFile) allImages.push(mainFile);
+        allImages = allImages.concat(selectedFiles);
+
+        if (allImages.length === 0) {
+            carouselInner.innerHTML = `<div class="carousel-item active"><div class="bg-light d-flex justify-content-center align-items-center" style="height: 380px;"><i class="bi bi-camera fs-1 text-secondary opacity-50"></i></div></div>`;
+            return;
+        }
+
+        allImages.forEach((file, i) => {
+            const url = URL.createObjectURL(file);
+            const item = document.createElement('div');
+            item.className = `carousel-item ${i === 0 ? 'active' : ''}`;
+            item.innerHTML = `<img src="${url}" class="d-block w-100" style="height: 380px; object-fit: cover;">`;
+            carouselInner.appendChild(item);
+
+            const thumb = document.createElement('img');
+            thumb.src = url;
+            thumb.className = `thumb-selector ${i === 0 ? 'active' : ''}`;
+            thumb.setAttribute('data-bs-target', '#carGallery');
+            thumb.setAttribute('data-bs-slide-to', i);
+            thumbContainer.appendChild(thumb);
+        });
+    }
+
+    document.getElementById('carGallery').addEventListener('slid.bs.carousel', () => {
+        document.querySelectorAll('.thumb-selector').forEach(el => el.classList.remove('active'));
+        let activeIdx = Array.from(document.querySelectorAll('.carousel-item')).indexOf(document.querySelector('.carousel-item.active'));
+        if(document.querySelector(`.thumb-selector[data-bs-slide-to="${activeIdx}"]`)) 
+            document.querySelector(`.thumb-selector[data-bs-slide-to="${activeIdx}"]`).classList.add('active');
+    });
+</script>
 {% endblock content %}

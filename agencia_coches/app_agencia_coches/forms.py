@@ -7,6 +7,15 @@ class CarsForm (forms.ModelForm):
     class Meta:
         model = Cars
         fields='__all__'
+        widgets = {
+            'fecha_fabricacion': forms.DateInput(
+                attrs={
+                    'type': 'date', 
+                    'class': 'form-control', 
+                    'style': 'background: #fcfcfc; border-radius: 12px; border: 1px solid #eee; padding: 0.75rem 1rem;'
+                }
+            ),
+        }
 
 
 
