@@ -1,64 +1,134 @@
 {% extends "index.html" %}
 
-{% block title %}
-<title>Editar Empleado</title>
-{% endblock title %}
-
 {% block content %}
-<div class="container mt-5 mb-5">
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm border-0 overflow-hidden rounded-4">
+<div class="container mt-5 mb-5 px-3">
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-4 text-center p-5 bg-white">
+                <div class="mb-4">
+                    {% if employee.foto %}
+                        <img src="{{ employee.foto.url }}" id="profilePreview" class="rounded-circle border" style="width: 180px; height: 180px; object-fit: cover;">
+                    {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="profilePreview" class="rounded-circle border" style="width: 180px; height: 180px;">
+                    {% endif %}
+                </div>
+                <h3 class="fw-bold">{{ employee.nombre }}</h3>
+                <p class="text-danger fw-bold text-uppercase">{{ employee.puesto }}</p>
+                
                 {% if employee.foto %}
-                    <img src="{{ employee.foto.url }}" class="img-fluid w-100" alt="{{ employee.nombre }}" style="height: 500px; object-fit: cover;">
-                {% else %}
-                    <div class="bg-light d-flex justify-content-center align-items-center" style="height: 500px;">
-                        <i class="bi bi-person-bounding-box fs-1 text-secondary"></i>
-                    </div>
+                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#deletePhotoModal">
+                    <i class="bi bi-trash"></i> Eliminar Foto
+                </button>
                 {% endif %}
-            </div>
-            <div class="mt-3 p-3 bg-white rounded-4 shadow-sm border-start border-dark border-4">
-                <h5 class="fw-bold mb-1">ID Trabajador: #{{ employee.id }}</h5>
-                <p class="text-muted small mb-0">Última actualización de perfil en curso...</p>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <h1 class="display-4 fw-bold">{{ employee.nombre }} {{ employee.apellidos }}</h1>
-            <p class="text-muted fs-4 text-uppercase">Puesto: <span class="text-danger">{{ employee.puesto }}</span></p>
-            <hr>
-            
-            <div class="bg-light p-4 rounded shadow-sm mb-4">
-                <h3 class="mb-4"><i class="bi bi-info-circle me-2"></i>Actualizar Detalles</h3>
+        <div class="col-md-7">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="checkbox" name="foto-clear" id="foto-clear_id" style="display: none;">
                 
-                <form method="POST" enctype="multipart/form-data" class="form-container">
-                    {% csrf_token %}
-                    
-                    <div class="list-group list-group-flush bg-transparent">
-                        {% for field in form %}
-                            <div class="list-group-item bg-transparent border-0 px-0 mb-3">
-                                <label class="fw-bold text-dark small text-uppercase">{{ field.label }}</label>
-                                <div class="mt-1">
-                                    {{ field }}
-                                </div>
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
-                                {% endif %}
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-dark text-white p-4">
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-shield-lock me-2 text-danger"></i>Seguridad de Cuenta</h4>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4"><label class="fw-bold small text-uppercase">Nombre de usuario</label></div>
+                            <div class="col-lg-8"><input type="text" name="username" value="{{ employee.user.username }}" class="form-control custom-input"></div>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4"><label class="fw-bold small text-uppercase">Apellidos</label></div>
+                            <div class="col-lg-8"><input type="text" name="apellidos" value="{{ employee.apellidos }}" class="form-control custom-input"></div>
+                        </div>
+
+                        <hr class="my-4 opacity-50">
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4">
+                                <label class="fw-bold small text-uppercase text-danger">Contraseña Actual *</label>
                             </div>
-                        {% endfor %}
+                            <div class="col-lg-8">
+                                <div class="input-group custom-pass-group border-danger">
+                                    <input type="password" name="old_password" class="form-control border-0 bg-transparent custom-input" placeholder="Requerido para cualquier cambio" required>
+                                    <button class="btn border-0" type="button" onclick="togglePassword(this)"><i class="bi bi-eye-fill"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4"><label class="fw-bold small text-uppercase">Nueva Contraseña</label></div>
+                            <div class="col-lg-8">
+                                <div class="input-group custom-pass-group">
+                                    <input type="password" name="password" class="form-control border-0 bg-transparent custom-input" placeholder="Dejar en blanco para no cambiar">
+                                    <button class="btn border-0" type="button" onclick="togglePassword(this)"><i class="bi bi-eye-fill"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 opacity-50">
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4"><label class="fw-bold small text-uppercase">Puesto</label></div>
+                            <div class="col-lg-8"><input type="text" name="puesto" value="{{ employee.puesto }}" class="form-control custom-input"></div>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-lg-4"><label class="fw-bold small text-uppercase">Foto</label></div>
+                            <div class="col-lg-8"><input type="file" name="foto" class="form-control custom-input pt-2"></div>
+                        </div>
                     </div>
 
-                    <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">
-                            <i class="bi bi-save me-2"></i>Guardar Cambios
-                        </button>
-                        <a href="{% url 'employees' %}" class="btn btn-outline-secondary rounded-pill px-4">
-                            <i class="bi bi-arrow-left me-2"></i>Volver al catálogo
-                        </a>
+                    <div class="card-footer bg-light p-4 d-flex gap-3 justify-content-end rounded-bottom-4">
+                        <a href="{% url 'employees' %}" class="btn btn-light rounded-pill px-4 border">Cancelar</a>
+                        <button type="submit" class="btn btn-danger rounded-pill px-5 fw-bold shadow">Guardar Cambios</button>
                     </div>
-                </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletePhotoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 p-4 pb-0">
+                <h5 class="fw-bold">¿Eliminar imagen de perfil?</h5>
+            </div>
+            <div class="modal-body p-4 text-muted">Esta acción quitará la foto actual. Recuerda guardar cambios después.</div>
+            <div class="modal-footer border-0 p-4">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" id="confirmDelete">Eliminar</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .custom-input, .custom-pass-group { 
+        height: 50px !important; border-radius: 12px !important; 
+        border: 1px solid #eee !important; background: #fcfcfc !important; 
+    }
+    .custom-pass-group { display: flex; align-items: center; overflow: hidden; }
+    .custom-input:focus, .custom-pass-group:focus-within { 
+        border-color: #dc3545 !important; background: #fff !important; 
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important; 
+    }
+</style>
+
+<script>
+    function togglePassword(btn) {
+        const input = btn.parentElement.querySelector('input');
+        input.type = input.type === "password" ? "text" : "password";
+        btn.querySelector('i').classList.toggle('bi-eye-fill');
+        btn.querySelector('i').classList.toggle('bi-eye-slash-fill');
+    }
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        document.getElementById('foto-clear_id').checked = true;
+        document.getElementById('profilePreview').src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        bootstrap.Modal.getInstance(document.getElementById('deletePhotoModal')).hide();
+    });
+</script>
 {% endblock content %}

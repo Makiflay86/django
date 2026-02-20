@@ -21,18 +21,18 @@ class CarsForm (forms.ModelForm):
 
 
 
-class EmployeesForm (forms.ModelForm):
-
-    # Añadimos campos que NO están en el modelo Employee pero queremos en el form
-    username = forms.CharField(label="Nombre de usuario", max_length=150)
-    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
+class EmployeesForm(forms.ModelForm):
+    username = forms.CharField(label="Nombre de usuario", max_length=150, required=False)
+    # Campo obligatorio para seguridad
+    old_password = forms.CharField(label="Contraseña Actual", widget=forms.PasswordInput, required=True)
+    # Campo opcional para el cambio
+    password = forms.CharField(label="Nueva Contraseña", widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = Employee
         fields = ['apellidos', 'puesto', 'foto']
 
-    # Ordenando la salida del formulario
-    field_order = ['username', 'apellidos', 'password', 'puesto', 'foto']
+    field_order = ['username', 'apellidos', 'old_password', 'password', 'puesto', 'foto']
 
 
 
