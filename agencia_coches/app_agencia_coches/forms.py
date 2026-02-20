@@ -24,7 +24,7 @@ class CarsForm (forms.ModelForm):
 class EmployeesForm(forms.ModelForm):
     username = forms.CharField(label="Nombre de usuario", max_length=150, required=False)
     # Campo obligatorio para seguridad
-    old_password = forms.CharField(label="Contraseña Actual", widget=forms.PasswordInput, required=True)
+    old_password = forms.CharField(label="Contraseña Actual", widget=forms.PasswordInput, required=False)
     # Campo opcional para el cambio
     password = forms.CharField(label="Nueva Contraseña", widget=forms.PasswordInput, required=False)
 

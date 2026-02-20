@@ -6,6 +6,7 @@ from django.forms import inlineformset_factory
 from django.contrib import messages # Importa los mensajes
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth import update_session_auth_hash
 
 @login_required
 def dashboard(request):
@@ -177,30 +178,42 @@ def employee_edit(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     if request.method == "POST":
         form = EmployeesForm(request.POST, request.FILES, instance=employee)
+        
+        # 1. Extraemos las claves del POST
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('password') # o 'new_password' según tu forms.py
+        user = employee.user
+
+        # 2. Seguridad: Validar contraseña actual antes de validar el form
+        if not old_password or not user.check_password(old_password):
+            form.add_error('old_password', 'La contraseña actual no es correcta.')
+            return render(request, 'employee/employee_edit.html', {'form': form, 'employee': employee})
+
         if form.is_valid():
-            new_password = form.cleaned_data.get('password')
-            user = employee.user
-            
-            # Si el usuario escribió algo en el campo contraseña...
+            # 3. Si quiere cambiar a una nueva contraseña
             if new_password:
                 try:
-                    # Validamos la contraseña contra las reglas de settings.py
                     validate_password(new_password, user)
                     user.set_password(new_password)
                     user.save()
+                    # Importante: actualiza la sesión para que no se desloguee si es él mismo
+                    update_session_auth_hash(request, user) 
                 except ValidationError as e:
-                    # Si no cumple los requisitos, añadimos el error al formulario
                     form.add_error('password', e)
                     return render(request, 'employee/employee_edit.html', {'form': form, 'employee': employee})
 
+            # 4. Guardar cambios de username y datos de Employee
+            new_username = form.cleaned_data.get('username')
+            if new_username:
+                user.username = new_username
+                user.save()
+
             form.save()
-            messages.success(request, f"Perfil de {user.username} actualizado correctamente.")
+            messages.success(request, f"Perfil de {user.username} actualizado.")
             return redirect('employees')
     else:
-        # Cargamos el nombre y el username como hicimos antes
         form = EmployeesForm(instance=employee, initial={
             'username': employee.user.username,
-            'nombre': employee.nombre,
         })
     
     return render(request, 'employee/employee_edit.html', {'form': form, 'employee': employee})
