@@ -4,7 +4,11 @@
 <title>Añadir empleado | AutoManage</title>
 {% endblock title %}
 
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/employees_create.css' %}">
+
 <div class="container mt-5 mb-5 px-3 px-lg-0">
     <div class="row g-4">
         <div class="col-md-5">
@@ -44,7 +48,6 @@
                     <div class="card-body p-4 p-md-5">
                         <div class="row">
                             {% for field in employees_form %}
-                                {# FILTRO: Ignoramos el campo de contraseña actual si existe en el form genérico #}
                                 {% if field.name != "old_password" %}
                                 <div class="col-md-6 mb-3">
                                     <label class="fw-bold small text-dark opacity-75 mb-2">
@@ -73,7 +76,6 @@
                                             La contraseña debe tener 8+ caracteres, una mayúscula y un número.
                                         </div>
                                     {% else %}
-                                        {# Renderizado de otros campos con la clase custom-input #}
                                         <div class="field-container">
                                             {{ field }}
                                         </div>
@@ -101,103 +103,6 @@
     </div>
 </div>
 
-<style>
-    /* ESTILO UNIFICADO AUTOMANAGE */
-    input, select, .custom-pass-group { 
-        display: flex; 
-        width: 100%; 
-        border-radius: 12px !important; 
-        border: 1px solid #eee !important; 
-        background: #fcfcfc !important; 
-        transition: 0.3s ease; 
-    }
-
-    input:not(.bg-transparent), select {
-        padding: 0.75rem 1rem;
-    }
-
-    input:focus, select:focus, .custom-pass-group:focus-within { 
-        outline: none; 
-        border-color: #dc3545 !important; 
-        background: #fff !important; 
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important; 
-    }
-
-    .custom-pass-group input:focus {
-        box-shadow: none !important;
-    }
-
-    /* Estilo para el botón de archivo */
-    input[type="file"]::file-selector-button {
-        background-color: #212529;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 4px 12px;
-        margin-right: 10px;
-        font-size: 0.8rem;
-    }
-</style>
-
-<script>
-    function togglePassword(btn) {
-        const input = btn.parentElement.querySelector('input');
-        const icon = btn.querySelector('i');
-        const isPass = input.type === "password";
-        input.type = isPass ? "text" : "password";
-        icon.classList.toggle('bi-eye-fill', !isPass);
-        icon.classList.toggle('bi-eye-slash-fill', isPass);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar Popovers
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        popoverTriggerList.map(function (el) { return new bootstrap.Popover(el) });
-
-        const form = document.getElementById('employeeForm');
-        const passInput = document.getElementById('id_password');
-        const passError = document.getElementById('password-error');
-
-        // Validación de contraseña en el Submit
-        form.addEventListener('submit', function(e) {
-            const pass = passInput ? passInput.value : "";
-            const isValid = pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass);
-            if (!isValid && passInput) {
-                e.preventDefault();
-                passError.classList.remove('d-none');
-                passInput.focus();
-            }
-        });
-
-        // Live Preview de Texto
-        form.addEventListener('input', function() {
-            const user = form.querySelector('[name="username"]')?.value || "";
-            const ape = form.querySelector('[name="apellidos"]')?.value || "";
-            const pto = form.querySelector('[name="puesto"]')?.value || "Puesto / Cargo";
-            document.getElementById('previewFullName').innerText = (user + " " + ape).trim() || "Nuevo Empleado";
-            document.getElementById('previewRole').innerText = pto;
-        });
-
-        // Live Preview de Foto
-        const photoInput = document.querySelector('input[name="foto"]');
-        if (photoInput) {
-            photoInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        document.getElementById('profilePreview').src = e.target.result;
-                        document.getElementById('btnRemovePhoto').style.display = "inline-block";
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        }
-
-        document.getElementById('btnRemovePhoto').addEventListener('click', function() {
-            if(photoInput) photoInput.value = "";
-            document.getElementById('profilePreview').src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            this.style.display = "none";
-        });
-    });
-</script>
+<script src="{% static 'js/employees_create.js'%}"></script>
+<script src="{% static 'js/toggle_password.js'%}"></script>
 {% endblock content %}

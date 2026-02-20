@@ -1,0 +1,20 @@
+.custom-input,
+.custom-pass-group {
+    height: 50px !important;
+    border-radius: 12px !important;
+    border: 1px solid #eee !important;
+    background: #fcfcfc !important;
+}
+
+.custom-pass-group {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.custom-input:focus,
+.custom-pass-group:focus-within {
+    border-color: #dc3545 !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important;
+}

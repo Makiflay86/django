@@ -1,0 +1,38 @@
+input,
+select,
+.custom-pass-group {
+    display: flex;
+    width: 100%;
+    border-radius: 12px !important;
+    border: 1px solid #eee !important;
+    background: #fcfcfc !important;
+    transition: 0.3s ease;
+}
+
+input:not(.bg-transparent),
+select {
+    padding: 0.75rem 1rem;
+}
+
+input:focus,
+select:focus,
+.custom-pass-group:focus-within {
+    outline: none;
+    border-color: #dc3545 !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important;
+}
+
+.custom-pass-group input:focus {
+    box-shadow: none !important;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #212529;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 12px;
+    margin-right: 10px;
+    font-size: 0.8rem;
+}
