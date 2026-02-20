@@ -1,35 +1,191 @@
-{%extends 'index.html'%}
+{% extends "index.html" %}
 
-{%block title%}
-<title>Añadir empleado</title>
-{%endblock title%}
+{% block title %}
+<title>Añadir empleado | AutoManage</title>
+{% endblock title %}
 
-{%block content%}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-
-            <section class="bg-light rounded shadow my-5">
-                <div class="text-center py-2 border-bottom border-danger">
-                    <h1>Añadir empleado</h1>
-                </div>
-                <article class="bg-info-subtle p-4">
-
-                    <form action="" method="POST" class="form" enctype="multipart/form-data">
-                        
-                        {%csrf_token%}
-                        {{employees_form}}
-
-                        <div class="my-3">
-                            <a href="{% url 'employees' %}" class="btn btn-danger">← Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+{% block content %}
+<div class="container mt-5 mb-5 px-3 px-lg-0">
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="sticky-top" style="top: 2rem;">
+                <div class="card shadow-lg border-0 overflow-hidden rounded-4 text-center p-5 bg-white">
+                    <div id="photoDisplay" class="mb-4">
+                        <div class="position-relative d-inline-block">
+                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" 
+                                 id="profilePreview" 
+                                 class="rounded-circle shadow border" 
+                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #fcfcfc !important;">
+                            <div class="position-absolute bottom-0 end-0 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center shadow" 
+                                 style="width: 45px; height: 45px; border: 3px solid white;">
+                                <i class="bi bi-person-vcard fs-5"></i>
+                            </div>
                         </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark" id="previewFullName">Nuevo Empleado</h3>
+                    <p class="text-danger fw-bold small text-uppercase mb-4" id="previewRole">Puesto / Cargo</p>
+                    <div class="p-3 rounded-4 bg-light text-start text-center">
+                        <div id="file-status" class="small fw-bold text-muted mb-2">Sin foto seleccionada</div>
+                        <button type="button" id="btnRemovePhoto" class="btn btn-outline-danger btn-sm rounded-pill px-3" style="display: none; font-size: 0.7rem;">
+                            <i class="bi bi-trash me-1"></i> Eliminar Foto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    </form>
+        <div class="col-md-7">
+            <form method="POST" enctype="multipart/form-data" id="employeeForm">
+                {% csrf_token %}
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-dark text-white p-4">
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus-fill me-2 text-danger"></i>Alta de Empleado</h4>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row">
+                            {% for field in employees_form %}
+                                <div class="col-md-6 mb-3">
+                                    <label class="fw-bold small text-dark opacity-75 mb-2">
+                                        {{ field.label }}
+                                        {% if field.name == "password" %}
+                                            <i class="bi bi-info-circle-fill text-primary ms-1" 
+                                               style="cursor: pointer;"
+                                               data-bs-toggle="popover" 
+                                               data-bs-trigger="hover focus" 
+                                               data-bs-placement="top" 
+                                               data-bs-html="true"
+                                               title="Seguridad"
+                                               data-bs-content="<small>• Mínimo 8 caracteres<br>• Una mayúscula<br>• Un número</small>">
+                                            </i>
+                                        {% endif %}
+                                    </label>
 
-                </article>
-            </section>
+                                    {% if field.name == "password" %}
+                                        <div class="input-group custom-pass-group">
+                                            <input type="password" name="{{ field.name }}" id="id_password" class="form-control border-0 bg-transparent shadow-none" style="padding: 0.75rem 1rem;">
+                                            <button class="btn border-0 bg-transparent text-muted px-3" type="button" onclick="togglePassword(this)">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </button>
+                                        </div>
+                                        <div id="password-error" class="text-danger mt-1 fw-bold d-none" style="font-size: 0.75rem;">
+                                            La contraseña debe tener 8+ caracteres, una mayúscula y un número.
+                                        </div>
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <div class="text-danger mt-1 fw-bold" style="font-size: 0.75rem;">
+                                            {{ field.errors|first }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light p-4 d-flex gap-3 justify-content-end border-0 rounded-bottom-4">
+                        <a href="{% url 'employees' %}" class="btn btn-light rounded-pill px-4 border fw-bold text-muted">Cancelar</a>
+                        <button type="submit" id="btnSubmit" class="btn btn-danger rounded-pill px-5 fw-bold shadow">
+                            Registrar Empleado
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-{%endblock content%}
+
+<style>
+    /* ESTILO UNIFICADO PARA TODOS LOS INPUTS */
+    input, select, .custom-pass-group { 
+        display: flex; 
+        width: 100%; 
+        border-radius: 12px !important; 
+        border: 1px solid #eee !important; 
+        background: #fcfcfc !important; 
+        transition: 0.3s ease; 
+    }
+
+    /* Padding solo para inputs normales (no los que van en group) */
+    input:not(.bg-transparent), select {
+        padding: 0.75rem 1rem;
+    }
+
+    input:focus, select:focus, .custom-pass-group:focus-within { 
+        outline: none; 
+        border-color: #dc3545 !important; 
+        background: #fff !important; 
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important; 
+    }
+
+    /* Ajuste para que el input group parezca un solo input */
+    .custom-pass-group input:focus {
+        box-shadow: none !important;
+    }
+</style>
+
+<script>
+    function togglePassword(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const icon = btn.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
+        } else {
+            input.type = "password";
+            icon.classList.replace('bi-eye-slash-fill', 'bi-eye-fill');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        popoverTriggerList.map(function (el) { return new bootstrap.Popover(el) });
+
+        const form = document.getElementById('employeeForm');
+        const passInput = document.getElementById('id_password');
+        const passError = document.getElementById('password-error');
+
+        form.addEventListener('submit', function(e) {
+            const pass = passInput ? passInput.value : "";
+            const isValid = pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass);
+            if (!isValid) {
+                e.preventDefault();
+                passError.classList.remove('d-none');
+                passInput.focus();
+            }
+        });
+
+        if(passInput) {
+            passInput.addEventListener('input', () => passError.classList.add('d-none'));
+        }
+
+        form.addEventListener('input', function() {
+            const user = form.querySelector('[name="username"]')?.value || "";
+            const ape = form.querySelector('[name="apellidos"]')?.value || "";
+            const pto = form.querySelector('[name="puesto"]')?.value || "Puesto / Cargo";
+            document.getElementById('previewFullName').innerText = (user + " " + ape).trim() || "Nuevo Empleado";
+            document.getElementById('previewRole').innerText = pto;
+        });
+
+        const photoInput = document.querySelector('input[name="foto"]');
+        if (photoInput) {
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        document.getElementById('profilePreview').src = e.target.result;
+                        document.getElementById('btnRemovePhoto').style.display = "inline-block";
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+
+        document.getElementById('btnRemovePhoto').addEventListener('click', function() {
+            if(photoInput) photoInput.value = "";
+            document.getElementById('profilePreview').src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            this.style.display = "none";
+        });
+    });
+</script>
+{% endblock content %}
