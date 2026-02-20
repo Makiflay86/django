@@ -60,7 +60,7 @@ def cars (request):
     cars = Cars.objects.all()
     return render(request, 'cars/cars.html', {'cars':cars})
 
-# Crear los coches
+# Crear un coche
 @login_required
 def cars_create(request):
     # Creamos la fábrica para gestionar las 10 imágenes adicionales
@@ -88,6 +88,8 @@ def cars_create(request):
 
     return render(request, 'cars/cars_create.html', {'cars_form': form,'formset': formset})
 
+# Editar el coche
+@login_required
 def cars_edit(request, pk):
     car = get_object_or_404(Cars, pk=pk)
     if request.method == "POST":
@@ -101,6 +103,18 @@ def cars_edit(request, pk):
     
     return render(request, 'cars/cars_edit.html', {'form': form, 'car': car})
 
+# Eliminar el coche
+@login_required
+def cars_delete(request, pk):
+    car = get_object_or_404(Cars, pk=pk)
+    if request.method == "POST":
+        nombre_coche = f"{car.marca} {car.modelo}"
+        car.delete()
+        messages.warning(request, f"Vehículo {nombre_coche} eliminado del stock.")
+        return redirect('cars')
+    return redirect('cars') # Si alguien entra por GET, solo redirige
+
+# Preview del coche
 @login_required
 def car_detail(request, pk):
     # Busca el coche por su ID (pk) o lanza un error 404 si no existe
